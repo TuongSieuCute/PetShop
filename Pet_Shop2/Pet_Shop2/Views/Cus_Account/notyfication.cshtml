@@ -1,0 +1,18 @@
+﻿@model Pet_Shop2.ModelsView.LoginViewModel
+@{
+    Layout = "";
+    ViewData["Title"] = "Lấy lại mật khẩu";
+}
+
+<link rel="stylesheet" href="~/Cus_assets/css/style.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="~/Cus_assets/css/grid.css">
+<div class="container_login margin-top margin-l-r">
+    <h3>Thay đổi mật khẩu thành công !,Bạn vui lòng kiểm tra lại hộp thư để cập nhật mật khẩu. <a href="/cus_account/log">Đăng nhập tại đây !</a></h3>
+</div>
+@section Scripts{
+
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+@await Component.InvokeAsync("Notyf")

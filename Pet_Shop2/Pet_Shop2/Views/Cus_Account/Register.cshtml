@@ -1,0 +1,79 @@
+﻿@model Pet_Shop2.ModelsView.RegisterAccount
+@{
+    ViewData["Title"] = "Đăng kí";
+    Layout = "";
+}
+<link rel="stylesheet" href="~/Cus_assets/css/style.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="~/Cus_assets/css/grid.css">
+<div class="container_login">
+    <form class="login" action="~/cus_account/register" method="post" autocomplete="off">
+        <h3 class="login_title">Đăng ký</h3>
+        <div class="row login_user_container">
+            <div class="left l-6">
+                <div class="container_input" style="margin-top: 50px;">
+                    <h4>Email</h4>
+                    <div class="container_flex_login login_user">
+                        <i class='bx bx-user'></i>
+                       @* <input class="login_user_main" type="email">*@
+                        @Html.TextBoxFor(x=>x.Email, new{@class="login_user_main",@type="email"})
+                    </div>
+                </div>
+                <div class="container_input">
+                    <h4>Tên tài khoản</h4>
+                    <div class="container_flex_login login_user">
+                        <i class='bx bx-user'></i>
+                        @* <input class="login_user_main" type="email">*@
+                        @Html.TextBoxFor(x=>x.UserName, new{@class="login_user_main",@type="text"})
+                    </div>
+                </div>
+                <div class="container_input">
+                    <h4>Mật khẩu</h4>
+                    <div class="container_flex_login password_user">
+                        <i class='bx bx-lock-alt'></i>
+                        @*<input class="password_user_main" type="password">*@
+                        @Html.TextBoxFor(x=>x.Password, new{@class="password_user_main",@type="password"})
+                    </div>
+                </div>
+                <div class="container_input">
+                    <h4>Xác nhận mật khẩu</h4>
+                    <div class="container_flex_login password_user">
+                        <i class='bx bx-lock-alt'></i>
+                        @*<input class="password_user_main" type="password">*@
+                        @Html.TextBoxFor(x=>x.ConfirmPassword, new{@class="password_user_main",@type="password"})
+                    </div>
+                </div>
+            </div>
+            <div class="right l-6">
+                <div class="container_input">
+                    <h4>Tên đầy đủ</h4>
+                    <div class="container_flex_login login_user">
+                        <i class='bx bx-id-card'></i>
+                        @*<input class="login_user_main" type="text">*@
+                        @Html.TextBoxFor(x=>x.FullName, new{@class="login_user_main",@type="text"})
+                    </div>
+                </div>
+                <div class="container_input">
+                    <h4>Điện thoại</h4>
+                    <div class="container_flex_login login_user">
+                        <i class='bx bx-phone'></i>
+                        @*<input class="login_user_main" type="number">*@
+                        @Html.TextBoxFor(x=>x.Phone, new{@class="login_user_main",@type="number"})
+                    </div>
+                </div>
+                <div class="container_input">
+                    <h4>Địa chỉ</h4>
+                    <div class="container_flex_login login_user">
+                        @Html.TextAreaFor(x=>x.Address,new {@class="login_user_main",@rows=3})
+                        @*<textarea class="login_user_main" name="" id="" cols="30" rows="3"></textarea>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container_submit_resgister">
+            <button type="submit" class="submit_register">Đăng ký</button>
+        </div>
+        <p class="login_account">Quay lại : <a href="~/cus_account/login">Đăng nhập</a></p>
+    </form>
+</div>
+@await Component.InvokeAsync("Notyf")

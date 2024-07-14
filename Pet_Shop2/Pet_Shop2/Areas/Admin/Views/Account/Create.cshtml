@@ -1,0 +1,75 @@
+﻿@using Pet_Shop2.Models;
+@model Pet_Shop2.Models.Account;
+@{
+    ViewData["Title"] = "Tạo tài khoản mới";
+    var rolelist = ViewBag.role as List<Role>;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<form action="~/Admin/Account/Create" method="post">
+    <div class="row">
+        <div class="col-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="RoleName" class="control-label">Tên đầy đủ</label>
+                @Html.TextBoxFor(m=>m.FullName, new { @class = "form-control",@placeholder="Họ và tên" ,@required=true})
+            </div>
+            <div class="form-group">
+                <label for="RoleName" class="control-label">Email</label>
+                @Html.TextBoxFor(m=>m.Email, new {@type="email", @class = "form-control",@placeholder="Email",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Số điện thoại</label>
+                @Html.TextBoxFor(m=>m.Phone, new { @class = "form-control",@placeholder="Số điện thoại",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên tài khoản</label>
+                @Html.TextBoxFor(m=>m.UserName, new { @class = "form-control",@placeholder="Tên tài khoản",@required=true })
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <label class="control-label">Mật khẩu</label>
+                @Html.TextBoxFor(m=>m.Password, new {@class = "form-control",@type="password",@placeholder="Mật khẩu",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Xác nhận mật khẩu</label>
+                <input placeholder="Xác nhận mật khẩu" type="password" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Vai trò</label>
+                <select name="RoleId" class="form-control select">
+                    @{
+                        if (rolelist != null)
+                        {
+                            foreach (var item in rolelist)
+                            {
+                                <option value="@item.Id">@item.RoleName</option>
+                            }
+                        }
+                    }
+
+                </select>
+            </div>
+            <div class="form-group row">
+                <label style="margin-left:10px" class="control-label">Trạng thái</label>
+                <div style="margin-left:15px" class="custom-control custom-checkbox">
+                    @*<input name="Active" class="form-control custom-control-input" type="checkbox" id="customCheckbox2" checked="checked">*@
+                    @Html.CheckBox("Active",true,new{@class="form-control custom-control-input",@id="customCheckbox2"})
+                    <label for="customCheckbox2" class="custom-control-label">Hoạt động</label>
+                </div>
+                @*@Html.TextBoxFor(m=>m.Password, new { @class = "form-control",@type="checkbox",@placeholder="Trạng thái" })*@
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Thêm mới</button>
+                <a class="btn bn-default" href="~/Admin/Account/index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</form>

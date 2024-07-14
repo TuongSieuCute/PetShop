@@ -1,0 +1,202 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Account>
+@using Pet_Shop2.Models;
+@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@section Linkheader{
+    <link rel="stylesheet" href="~/Admin_assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin_assets/plugins/select2/css/select2.min.css">
+}
+@{
+    ViewData["Title"] = "Danh sách khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Bộ lọc dữ liệu</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Thanh toán</label>
+                    <select class="select2bs4" data-placeholder="Chọn phương thức" style="width: 100%;">
+                        <option selected disabled>Tất cả</option>
+                    </select>
+                </div>
+
+            </div>
+            <!-- /.col -->
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Hoạt động</label>
+                    <select class="form-control select2bs4" style="width: 100%;">
+                        <option selected="selected" disabled>Hoạt động</option>
+                        <option>Không hoạt động</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Sắp xếp</label>
+                    <select class="form-control select2bs4" style="width: 100%;">
+                        <option selected="selected">Tăng dần</option>
+                        <option>Giảm dần</option>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group input-group-lg">
+                <input id="keyword" type="search" class="form-control form-control-lg" placeholder="Từ khóa tìm kiếm" value="">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-lg btn-default">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+</div>
+<div class="card">
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        @if (Model != null)
+        {
+            <div id="records_table">
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkall" /></th>
+                            <th class="text-center">#</th>
+                            <th class="text-center">ID Khách hàng</th>
+                            <th class="text-center">Họ và tên</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Điện thoại</th>
+                            <th class="text-center">Địa chỉ</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{
+
+                            int index = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                                    <td class="align-middle text-center">@index</td>
+                                    <td style="width:150px" class="align-middle text-center">@item.Id</td>
+                                    <td class="align-middle text-center">@item.FullName</td>
+                                    <td class="align-middle text-center">@item.Email</td>
+                                    <td class="align-middle text-center">@item.Phone</td>
+                                    <td style="width:150px" class="align-middle">@item.Address</td>
+                                    <td class="align-middle text-center">
+                                        <a class="btn btn-warning" href="#">Chi tiết</a> |
+                                        <button class="btn btn-danger" onclick="Delete(@item.Id)">Xóa</button>
+                                    </td>
+                                </tr>
+
+                                index++;
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+
+        }
+        else
+        {
+            <h3>Không có dữ liệu</h3>
+        }
+
+    </div>
+    <!-- /.card-body -->
+    @* @if (Model != null)
+    {
+        <div class="card-footer">
+            <div style="float:right;">
+                @Html.PagedListPager((IPagedList)Model,page=>Url.Action("Index",new{page=page}),
+            new X.PagedList.Mvc.Common.PagedListRenderOptions{
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.Never,
+            LinkToFirstPageFormat = "1",
+            LinkToPreviousPageFormat = "←",
+            LinkToNextPageFormat = "→",
+            MaximumPageNumbersToDisplay = 5,
+            DisplayItemSliceAndTotal = false,
+            LiElementClasses = new[] { "page-item" },
+            UlElementClasses = new string[] { "pagination" },
+            PageClasses = new string[] { "page-link" }
+            })
+            </div>
+
+        </div>
+    } *@
+
+</div>
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            $('.select2').select2();
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+        })
+        //Thực hiện việc tìm kiếm dữ liệu khi search
+        $("#keyword").keyup(function () {
+            var strkeyword = $("#keyword").val();
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/Search/FindCustomer/',
+                data: { keyword: strkeyword },
+                success: function (results) {
+                    $("#records_table").html("");
+                    //console.log(results);
+                    $("#records_table").html(results);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    // Xử lý lỗi ở đây nếu cần thiết
+                }
+            });
+        });
+        //Thực hiện việc tìm kiếm dữ liệu khi bấm button
+        $("#btnsearch").on("click", function () {
+            var strkeyword = $("#keyword").val();
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/Search/FindCustomer/',
+                data: { keyword: strkeyword},
+                success: function (results) {
+                    $("#records_table").html("");
+                    $("#records_table").html(results);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    // Xử lý lỗi ở đây nếu cần thiết
+                }
+            });
+        })
+
+    </script>
+    <script src="~/Admin_assets/plugins/select2/js/select2.full.min.js"></script>
+}

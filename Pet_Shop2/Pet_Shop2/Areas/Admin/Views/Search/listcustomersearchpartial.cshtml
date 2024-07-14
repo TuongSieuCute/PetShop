@@ -1,0 +1,46 @@
+﻿@using Pet_Shop2.Models;
+@model List<Account>;
+
+@if(Model!=null)
+{
+    <table id="mytable" class="table table-bordred table-striped">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkall" /></th>
+                <th class="text-center">#</th>
+                <th class="text-center">ID Khách hàng</th>
+                <th class="text-center">Họ và tên</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Điện thoại</th>
+                <th class="text-center">Địa chỉ</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{
+
+                int index = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                        <td class="align-middle text-center">@index</td>
+                        <td style="width:150px" class="align-middle text-center">@item.Id</td>
+                        <td class="align-middle text-center">@item.FullName</td>
+                        <td class="align-middle text-center">@item.Email</td>
+                        <td class="align-middle text-center">@item.Phone</td>
+                        <td style="width:150px" class="align-middle">@item.Address</td>
+                        <td class="align-middle text-center">
+                            <a class="btn btn-warning" href="#">Chi tiết</a> |
+                            <button class="btn btn-danger" onclick="Delete(@item.Id)">Xóa</button>
+                        </td>
+                    </tr>
+
+                    index++;
+                }
+            }
+        </tbody>
+
+    </table>
+}

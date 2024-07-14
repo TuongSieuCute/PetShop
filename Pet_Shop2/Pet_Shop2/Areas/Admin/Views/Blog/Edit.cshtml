@@ -1,0 +1,131 @@
+﻿@model Pet_Shop2.Models.Blog;
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Blog";
+    Layout = "~/Areas/Admin/views/shared/_AdminLayout.cshtml";
+}
+@section Linkheader{
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/Admin_assets/plugins/summernote/summernote-bs4.min.css">
+}
+<!-- Tabs content -->
+<div class="row">
+    <div class="col-12">
+        <form action="~/Admin/blog/Edit" enctype="multipart/form-data" method="post">
+            <div class="card mt-3 tab-card">
+                <div class="card-header tab-card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Hình ảnh</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Mô tả</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Three" aria-selected="false">Phương thức</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x=>x.Id,new {@type="hidden"})
+                                    <label for="customFile">Ảnh đại diện</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="imageFile" name="fThumb" accept="image/*" required">
+                                        <label class="custom-file-label" for="customFile">Chọn ảnh</label>
+                                    </div>
+                                    <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                                    <div><img style="width:50%;" src="~/FolderImages/blogs/@Model.Thumb" id="imagePreview" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ProductName" class="control-label">Tên bài viết</label>
+                                    @Html.TextBoxFor(x=>x.Title,new{@class="form-control",@placeholder="Tên bài viết"})
+                                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label">Lượt xem</label>
+                                    @Html.TextBoxFor(x=>x.Views,new {@class="form-control",@type="number"})
+                                    <span asp-validation-for="Views" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        @Html.CheckBox("Published",Model.Published == true ? true : false, new{@class="custom-control-input",@id="customSwitch1"})
+                                        <label class="custom-control-label" for="customSwitch1">Hoạt động</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x=>x.Contents,new{@id="summernote",@placeholder="Mô tả sản phẩm"})
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ShortDesc" class="control-label">Mô tả ngắn</label>
+                                    @Html.TextAreaFor(x=>x.Scontents,new {@class="form-control"})
+                                    <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Meta Key</label>
+                                    @Html.TextAreaFor(x=>x.MetaKey,new {@class="form-control"})
+                                    <span asp-validation-for="MetaKey" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Meta Desc</label>
+                                    @Html.TextAreaFor(x=>x.MetaDesc,new {@class="form-control"})
+                                    <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                <a href="~/Admin/blog/index" class="btn btn-default">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Summernote -->
+    <script src="~/Admin_assets/plugins/summernote/summernote-bs4.min.js"></script>
+    <script>
+        $(".custom-file-input").on("change", function (event) {
+            var filename = $(this).val().split("\\").pop();
+            $(".custom-file-label").html(filename);
+
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var imageURL = URL.createObjectURL(input.files[0]);
+                $('#imagePreview').attr('src', imageURL);
+                $('#imagePreview').show();
+            }
+
+        })
+        $(function () {
+            // Summernote
+            $('#summernote').summernote({
+                height: 200
+            });
+        })
+    </script>
+
+
+
+}

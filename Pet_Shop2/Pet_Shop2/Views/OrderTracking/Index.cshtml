@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Order>
+@using Pet_Shop2.Models;
+@using Pet_Shop2.Helper;
+@{
+    Layout = "~/views/shared/_Layout.cshtml";
+    ViewData["Title"] = "Các đơn đã đặt";
+}
+
+@if (Model != null)
+{
+    <div class="cart margin-top">
+        <h2 class="products_heading">Chi tiết các đơn hàng</h2>
+        <div id="records_table">
+            <table class="cart_table">
+                <thead class="text-center table_head">
+                    <tr>
+                        @*<td class="header_context_product"><a href="#" class="remove_all_product"><i class="bx bx-trash"></i></a></td>*@
+                        <td class="header_context_product">Mã đơn hàng</td>
+                        <td class="header_context_product">Ngày đặt đơn</td>
+                        <td class="header_context_product">Số lượng</td>
+                        <td class="header_context_product">Tổng tiền</td>
+                        <td class="header_context_product">#</td>
+                    </tr>
+                </thead>
+                <tbody class="table_body">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="table_row">
+                            <td class="table_column_product text-center">@item.Id</td>
+                            <td class="table_column_product text-center">@item.OrderDate</td>
+                            <td class="table_column_product text-center">@item.OrderDetails.Sum(x=>x.Quantity)</td>
+                            <td class="table_column_product text-center">@Utilities.ToVND((double)@item.OrderDetails.Sum(x=>x.Total)) </td>
+                            <td class="table_column_product text-center"><a href="~/ordertracking/Details/?OrDerID=@item.Id" class="btn_primary">Xem chi tiết</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+}
+else
+{
+    <div class="margin-l-r margin-top">
+        <h3>Bạn chưa đặt đơn hàng nào ! Vui lòng <a href="/cus_account/login">Đăng nhập</a></h3>
+    </div>
+    
+}
+

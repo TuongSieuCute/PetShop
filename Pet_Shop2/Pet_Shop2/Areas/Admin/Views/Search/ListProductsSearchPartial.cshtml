@@ -1,0 +1,57 @@
+﻿@using Pet_Shop2.Models;
+
+@model List<Product>
+
+@if (Model != null)
+{
+    <table id="mytable" class="table table-bordred table-striped">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkall" /></th>
+                <th class="text-center">#</th>
+                <th class="text-center">Ảnh</th>
+                <th class="text-center">Tên SP</th>
+                <th class="text-center">Loại SP</th>
+                <th class="text-center">Còn lại</th>
+                <th class="text-center">Giá</th>
+                <th class="text-center">Giảm giá</th>
+                <th class="text-center">Hoạt động</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{
+
+
+
+
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    var item = Model[i];
+                    <tr>
+                        <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                        <td class="align-middle text-center">@(i + 1)</td>
+                        <td class="align-middle text-center" style="width:100px"><img style="width:100%;" src="~/FolderImages/products/@item.Thumb" /></td>
+                        <td class="align-middle">@item.ProductName</td>
+                        <td class="align-middle">@(item.Category != null ? item.Category.Name : "Không")</td>
+                        <td class="align-middle text-center">@item.Quantity</td>
+                        <td class="align-middle text-center">@item.Price</td>
+                        <td class="align-middle text-center">@item.Discount</td>
+                        @*<td class="text-center align-middle">@Html.CheckBoxFor(x=>(bool)item.Active)</td>*@
+                        <td class="text-center  align-middle">
+                            <input type="checkbox" class="checkthis" name="Active[@i]" @((bool)item.Active ? "checked" : "") />
+                        </td>
+                        <td class="align-middle text-center">
+                            <a class="btn btn-warning" href="~/Admin/products/edit/@item.Id">Sửa</a> |
+                            <button class="btn btn-danger" onclick="Delete(@item.Id)">Xóa</button>
+                        </td>
+                    </tr>
+
+                }
+
+            }
+        </tbody>
+
+    </table>
+}

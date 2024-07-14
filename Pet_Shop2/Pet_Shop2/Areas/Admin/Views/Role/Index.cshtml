@@ -1,0 +1,88 @@
+﻿@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using Pet_Shop2.Models;
+@model IEnumerable<Role>
+@{
+    ViewData["Title"] = "Vai trò";
+    Layout = "~/Areas/admin/views/shared/_AdminLayout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        @*<h3 class="card-title">Bordered Table</h3>*@
+        <a href="~/Admin/Role/Create" class="btn btn-success">Thêm mới</a>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 10px">#</th>
+                    <th class="text-center">Tên vai trò</th>
+                    @*<th class="text-center">Mô tả</th>*@
+                    @*<th class="text-center">Thao tác</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@index</td>
+                            <td class="text-center">@item.RoleName</td>
+                            @*<td>@item.Description</td>*@
+                            <td class="text-center">
+                                <a href="~/Admin/Role/Edit/@item.Id" class="btn btn-warning">Sửa</a>
+                                <a class="btn btn-danger" onclick="confirmDelete(@item.Id)">Xóa</a>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+    @* <div class="card-footer">
+        <div style="float:right;">
+            @Html.PagedListPager((IPagedList)Model,page=>Url.Action("Index",new{page=page}),
+            new X.PagedList.Mvc.Common.PagedListRenderOptions{
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.Never,
+            LinkToFirstPageFormat = "1",
+            LinkToPreviousPageFormat = "←",
+            LinkToNextPageFormat = "→",
+            MaximumPageNumbersToDisplay = 5,
+            DisplayItemSliceAndTotal = false,
+            LiElementClasses = new[] { "page-item" },
+            UlElementClasses = new string[] { "pagination" },
+            PageClasses = new string[] { "page-link" }
+            })
+        </div>
+    </div> *@
+
+</div>
+
+
+
+@section Scripts{
+    <script>
+        function confirmDelete(id) {
+            alert("Không thể xóa");
+            /*var url = '@Url.Action("Delete", "Role")';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { id: id },
+                success: function (result) {
+                    // Xử lý kết quả sau khi xóa thành công
+                    // Ví dụ: cập nhật danh sách dữ liệu
+                    location.reload();
+                }
+            });*/
+
+        }
+    </script>
+}

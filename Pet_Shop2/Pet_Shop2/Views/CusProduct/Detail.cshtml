@@ -1,0 +1,299 @@
+﻿@model Pet_Shop2.Models.Product;
+@using Pet_Shop2.Helper;
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/views/shared/_Layout.cshtml";
+    var lstChildImage = ViewBag.ChildImage as List<ProductImage>;
+    var lstComment = ViewBag.Comment as List<ProductRate>;
+}
+<div class="detail_product margin-top">
+    <div class="detail_product_container row-wrap">
+        <div class="detail_product_img l-5 m-5 s-12">
+            <div class="product">
+                <div class="product_border">
+                    <div class="product_img" style="height:unset"><img src="~/FolderImages/products/@Model.Thumb" alt=""></div>
+                    <span class="sticky_sale">On Sale !</span>
+                </div>
+            </div>
+
+            @if (lstChildImage?.Count() > 0 && lstChildImage != null)
+            {
+                <div class="product_connection owl-carousel owl-theme">
+                    @foreach (var item in lstChildImage)
+                    {
+                        <div class="item product_connection_img"><img src="~/FolderImages/Childproduct/@item.ImageName" alt=""></div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="product_connection owl-carousel owl-theme">
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products2.jpg" alt=""></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products3.jpg" alt=""></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products4.jpg" alt=""></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products5.jpg" alt=""></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products6.jpg" alt=""></div>
+                </div>
+            }
+
+        </div>
+        <div class="detail_product_content l-7 m-7 s-12">
+            <h3 class="detail_product_name">@Model.ProductName</h3>
+            <span class="detail_product_price">
+                Giá:  @if (Model.Price != null)
+                {
+                    string price = Utilities.ToVND((double)Model.Price);
+
+                    @if (Model.Discount != null && Model.Discount > 1 && Model.Discount != 0)
+                    {
+                        <span class="product_price_sale">@price</span>
+                        double price_sale = (double)Model.Price - (double)Model.Price * ((double)Model.Discount / 100);
+                        string price1 = Utilities.ToVND((double)price_sale);
+                        <span class="product_price">@price1</span>
+                    }
+                    else
+                    {
+                        <span class="product_price">@price</span>
+                    }
+                }
+            </span>
+            <div class="product_stars">
+                @for (int i = 0; i < Model.Star; i++)
+                {
+                    <i class='bx bxs-star'></i>
+
+                }
+
+                @*<i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star-half'></i>*@
+            </div>
+            <p class="detail_product_desc">@Html.Raw(@Model.Description)</p>
+
+            <div class="detail_product_quatity">
+                <div class="detail_quantity_product">
+                    <span class="minus-btn"><i class="operator_minus bx bx-minus"></i></span>
+                    <input class="input_quantity_product" type="text" value="1">
+                    <span class="plus-btn"><i class="operator_plus bx bx-plus"></i></span>
+                </div>
+                <a href="#" data-id="@Model.Id" class="addproduct btn_primary">Thêm vào giỏ</a>
+            </div>
+            <div class="product_like">
+                <a href="#">
+                    <i class="bx bx-heart"></i>
+                    <h3>Thêm vào danh sách sản phẩm yêu thích !</h3>
+                </a>
+
+            </div>
+            <ul class="detail_product_items">
+                <li class="detail_product_item"><h3>Mã hàng: </h3> <h4>@Model.Id</h4></li>
+                <li class="detail_product_item">
+                    <h3>Loại sản phẩm: </h3>
+                    @if (Model.Category != null && !string.IsNullOrEmpty(Model.Category.Name))
+                    {
+                        <h4>@Model.Category.Name</h4>
+                    }
+                    else
+                    {
+                        <h4>Chưa thuộc loại sản phẩm nào !</h4>
+                    }
+
+                </li>
+                <li class="detail_product_item">
+                    <h3>Đang có: </h3>
+
+                    @if (Model.Quantity == null)
+                    {
+                        <h4>1</h4>
+                    }
+                    else
+                    {
+                        <h4>@Model.Quantity</h4>
+                    }
+                </li>
+                <li class="detail_product_item"><h3>Lượt thích: </h3> <h4>@Model.Liked</h4></li>
+            </ul>
+
+            <div class="detail_product_share">
+                <h3>Share</h3>
+                <ul class="detail_product_share_items">
+                    <li class="detail_product_share_item"><i class='bx bxl-facebook'></i></li>
+                    <li class="detail_product_share_item"><i class='bx bxl-instagram'></i></li>
+                    <li class="detail_product_share_item"><i class='bx bxl-linkedin'></i></li>
+                    <li class="detail_product_share_item"><i class='bx bxl-twitter'></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="detail_product_more">
+
+        <h2 class="detail_product_more_title">Description</h2>
+        <div class="detail_product_des">
+            @if (Model.Description != "" || Model.Description != null)
+            {
+                @Html.Raw(@Model.Description)
+            }
+            else
+            {
+                <p>Chưa có thông tin</p>
+            }
+        </div>
+
+    </div>
+    <div class="detail_product_more" style="margin-top: 10px;">
+        <h2 class="detail_product_more_title">Reviews</h2>
+        @if (lstComment.Count() > 0 && lstComment != null)
+        {
+            @foreach (var item in lstComment)
+            {
+                <div class="row container_reviews">
+                    <div class="reviews_img l-1"><img src="https://templates.envytheme.com/patoi/default/assets/img/user/user1.jpg" alt=""></div>
+                    <div class="reviews_content l-11">
+                        <h4 class="review_name">@item.CusName</h4>
+                        <div class="product_stars">
+                            @for (int i = 0; i < item.Rating; i++)
+                            {
+                                <i class='bx bxs-star'></i>
+
+                            }
+                        </div>
+                        <p class="desc" style="text-align: justify;">@item.Comment</p>
+                    </div>
+                </div>
+            }
+
+        }
+        else
+        {
+            <div class="row container_reviews">
+               
+                    <p class="desc" style="text-align: justify;">Chưa có bình luận nào cho bài viết này !</p>
+            </div>
+
+        }
+
+    </div>
+    <form id="commentForm" action="/cusproduct/AddComment/" method="get">
+        <input type="hidden" name="ProductId" value="@Model.Id" />
+        <div class="detail_product_more" style="margin-top: 10px;">
+            <h2 class="detail_product_more_title">Viết bình luận</h2>
+            <div class="row" style="align-items: center;">
+                <input type="hidden" value="0" name="Rating" id="selectedStars" />
+                <span style="padding: 10px 0px;">Đánh giá: </span>
+                <div class="rating">
+                    <i style="color: #d1d1d1; cursor: pointer;" class='bx bxs-star'></i>
+                    <i style="color: #d1d1d1; cursor: pointer;" class='bx bxs-star'></i>
+                    <i style="color: #d1d1d1; cursor: pointer;" class='bx bxs-star'></i>
+                    <i style="color: #d1d1d1; cursor: pointer;" class='bx bxs-star'></i>
+                    <i style="color: #d1d1d1; cursor: pointer;" class='bx bxs-star'></i>
+                </div>
+            </div>
+            <textarea name="Comment" class="input_textarea" style="margin-top: 10px;" placeholder="Bình luận" id="" cols="30" rows="5"></textarea>
+            <button type="submit" class="btn_primary">Đăng bình luận</button>
+        </div>
+    </form>
+
+</div>
+
+@section Scripts{
+    <script src="~/cus_assets/js/shoppingcart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".plus-btn").click(function () {
+                var input = $(this).prev(".input_quantity_product");
+                var currentValue = parseInt(input.val());
+                if (currentValue > 0) {
+                    input.val(currentValue + 1);
+                }
+            });
+
+            $(".minus-btn").click(function () {
+                var input = $(this).next(".input_quantity_product");
+                var currentValue = parseInt(input.val());
+                if (currentValue > 1) {
+                    input.val(currentValue - 1);
+                }
+            });
+            // Xử lý sự kiện khi click vào ảnh sản phẩm
+            $('.product_connection_img img').click(function () {
+                // Lấy đường dẫn của ảnh khi click
+                var imagePath = $(this).attr('src');
+
+                // Hiển thị ảnh trong phần tử product_img
+                $('.product_img img').attr('src', imagePath);
+            });
+
+            //Đánh giá sao cho sản phẩm
+            var stars = $('.rating .bxs-star');
+            var selectedStars = 0;
+
+            stars.on('mouseenter', function () {
+                $(this).prevAll().addBack().css('color', '#ffd700'); // Chuyển màu từ đầu đến ngôi sao được hover
+            });
+
+            stars.on('mouseleave', function () {
+                stars.css('color', '#d1d1d1'); // Chuyển màu tất cả các ngôi sao về màu mặc định
+                stars.slice(0, selectedStars).css('color', '#ffd700'); // Giữ màu vàng cho số lượng ngôi sao được chọn
+            });
+
+            stars.on('click', function () {
+                selectedStars = stars.index(this) + 1; // Cập nhật số lượng ngôi sao được chọn
+                stars.slice(0, selectedStars).css('color', '#ffd700'); // Chuyển màu từ đầu đến ngôi sao được click
+                $('#selectedStars').val(selectedStars);
+            });
+
+
+            //Thêm bình luận
+            /*$('#commentForm').submit(function (event) {
+                event.preventDefault(); // Ngăn chặn form tự động submit
+
+                var formData = $(this).serialize(); // Thu thập dữ liệu từ form
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/cusproduct/addcomment/', // Lấy URL từ thuộc tính action của form
+                    data: formData,
+                    success: function (success) {
+                        console.log(success);
+                        // Xử lý phản hồi từ Controller ở đây
+                        if (success) {
+
+                            // Xử lý khi thành công
+                            Toastify({
+
+                                text: "Bình luận của bạn đã được đăng !",
+                                close: true,
+                                duration: 2000,
+                                style: {
+                                    background: "#28a745",
+                                },
+                                offset: {
+                                    x: 0, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                                    y: 70 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                                }
+
+                            }).showToast();
+                        } else {
+                            // Xử lý khi thất bại
+                            Toastify({
+
+                                text: "Có lỗi xãy ra",
+                                close: true,
+                                duration: 2000,
+                                style: {
+                                    background: "#dc3545",
+                                },
+                                offset: {
+                                    x: 0, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                                    y: 70 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                                }
+
+                            }).showToast();
+                        }
+                    }
+                });
+            });*/
+        });
+    </script>
+}

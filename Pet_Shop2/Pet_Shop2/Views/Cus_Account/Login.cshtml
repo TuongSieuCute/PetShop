@@ -1,0 +1,51 @@
+﻿@model Pet_Shop2.ModelsView.LoginViewModel
+@{
+    Layout = "";
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<link rel="stylesheet" href="~/Cus_assets/css/style.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="~/Cus_assets/css/grid.css">
+<div class="container_login">
+    <form action="~/cus_account/Login" method="post" class="login" autocomplete="off">
+        <h3 class="login_title">Đăng nhập</h3>
+        <div class="container_input" style="margin-top: 50px;">
+            <h4>Tài khoản / Email</h4>
+            <div class="container_flex_login login_user">
+                <i class='bx bxs-user'></i>
+                @Html.TextBoxFor(x=>x.UserName, new {@class="login_user_main"})
+                @*<input id="login_user_main" type="text">*@
+            </div>
+        </div>
+        <div class="container_input">
+            <h4>Mật khẩu</h4>
+            <div class="container_flex_login password_user">
+                <i class='bx bx-lock-alt'></i>
+                @Html.TextBoxFor(x=>x.Password, new {@class="password_user_main",@type="password"})
+                @*<input id="password_user_main" type="password">*@
+            </div>
+        </div>
+        <div class="forgot_password">
+            <a href="/cus_account/forgetpassword/forget">Bạn quên mật khẩu ?</a>
+        </div>
+        <div class="container_submit_login">
+            <button type="submit" class="submit_login">Đăng nhập</button>
+        </div>
+
+        <div class="login_other">
+            <p>Đăng nhập bằng</p>
+            <ul class="list_login">
+                <li><a href=""><i class='bx bxl-facebook'></i></a></li>
+                <li><a href=""><i class='bx bxl-google'></i></a></li>
+            </ul>
+        </div>
+        <p class="register_account">Bạn chưa có tài khoản ? <a href="~/cus_account/register">Đăng kí</a></p>
+    </form>
+</div>
+@section Scripts{
+    
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+@await Component.InvokeAsync("Notyf")

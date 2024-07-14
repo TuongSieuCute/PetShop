@@ -1,0 +1,47 @@
+﻿@using Pet_Shop2.Models;
+@model List<ProductRate>
+
+@if(Model!=null)
+{
+    <table id="mytable" class="table table-bordred table-striped">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkall" /></th>
+                <th class="text-center">#</th>
+                <th class="text-center">ID</th>
+                <th class="text-center">ProductID</th>
+                <th class="text-center">Rating</th>
+                <th class="">Comment</th>
+                <th class="text-center">Tên khách hàng</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{
+
+                int index = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                        <td class="align-middle text-center">@index</td>
+                        <td class="align-middle text-center">@item.Id</td>
+                        <td class="align-middle text-center">@item.ProductId</td>
+                        <td class="align-middle text-center">@item.Rating</td>
+                        <td class="align-middle">@item.Comment</td>
+                        <td class="align-middle text-center">@item.CusName</td>
+                        <td class="align-middle text-center">
+                            <a class="btn btn-warning" href="~/Admin/products/edit/@item.Id">Sửa</a> |
+                            <a href="~/admin/products/deletecomment/?id=@item.Id" class="btn btn-danger">Xóa</a>
+                        </td>
+                    </tr>
+
+                    index++;
+                }
+            }
+        </tbody>
+
+    </table>
+}
+

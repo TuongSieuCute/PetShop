@@ -1,0 +1,51 @@
+﻿@using Pet_Shop2.Models;
+@using Pet_Shop2.Helper;
+@model List<Order>;
+
+@if(Model!=null)
+{
+    <table id="mytable" class="table table-bordred table-striped">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkall" /></th>
+                <th class="text-center">#</th>
+                <th class="text-center">ID Đơn hàng</th>
+                <th class="text-center">Ngày đặt</th>
+                <th class="text-center">Ngày giao</th>
+                <th class="text-center">Trạng thái</th>
+                <th class="text-center">Địa chỉ</th>
+                <th class="text-center">Thanh toán</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{
+
+                int index = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                        <td class="align-middle text-center">@index</td>
+                        <td style="width:150px" class="align-middle text-center">@item.Id</td>
+                        <td class="align-middle text-center">@item.OrderDate</td>
+                        <td class="align-middle text-center">@item.ShipDate</td>
+                        <td class="align-middle text-center">@item?.TransctStatus?.Name</td>
+                        <td style="width:150px" class="align-middle">@item?.Address</td>
+
+                        <td class="align-middle text-center">@(item?.Paid == true ? "Đã thanh toán" : "Chưa thanh toán")</td>
+
+                        <td class="align-middle text-center">
+                            <a class="btn btn-warning" href="~/admin/order/details/?id=@item?.Id">Chi tiết</a> |
+                            <button class="btn btn-danger" onclick="Delete(@item?.Id)">Xóa</button>
+                        </td>
+                    </tr>
+
+                    index++;
+                }
+            }
+        </tbody>
+
+    </table>
+}

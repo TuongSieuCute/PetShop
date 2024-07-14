@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Account>
+@using Pet_Shop2.Models;
+@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+@{
+
+    ViewData["Title"] = "Danh sách tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <a href="~/Admin/Account/create" class="btn btn-success">Thêm mới</a>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table class="table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 40px">#</th>
+                    <th class="text-center">ID</th>
+                    @*<th class="text-center">Tên đầy đủ</th>*@
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Tên tài khoản</th>
+                    <th class="text-center">SĐT</th>
+                    <th class="text-center">Vai trò</th>
+                    <th class="text-center">Hoạt động</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    foreach (var item in @Model)
+                    {
+                        <tr>
+                            <td style="padding:15px 10px" class="text-center">@index</td>
+                            <td style="padding:15px 10px" class="text-center">@item.Id</td>
+                            @*<td style="padding:15px 10px" class="text-center">@item.Fullname</td>*@
+                            <td style="padding:15px 10px">@item.Email</td>
+                            <td style="padding:15px 10px">@item.UserName</td>
+                            <td style="padding:15px 10px" class="text-center">@item.Phone</td>
+                            <td style="padding:15px 10px" class="text-center">@(item.Role != null ? item.Role.RoleName : "Không")</td>
+                            <td style="padding:15px 10px" class="text-center">
+                                @Html.CheckBox("Active",@item.Active==true?true:false, new{@class="acc_active",@id=item.Id})
+                            </td>
+                            <td style="padding:15px 10px" class="text-center">
+                                <a class="btn btn-warning" href="~/Admin/Account/Edit/@item.Id">Sửa</a> |
+                                <a class="btn btn-danger" onclick="Delete(@item.Id)">Xóa</a>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+    @* <div class="card-footer">
+        <div style="float:right;">
+            @Html.PagedListPager((IPagedList)Model,page=>Url.Action("Index",new{page=page}),
+            new X.PagedList.Mvc.Common.PagedListRenderOptions{
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.Never,
+            LinkToFirstPageFormat = "1",
+            LinkToPreviousPageFormat = "←",
+            LinkToNextPageFormat = "→",
+            MaximumPageNumbersToDisplay = 5,
+            DisplayItemSliceAndTotal = false,
+            LiElementClasses = new[] { "page-item" },
+            UlElementClasses = new string[] { "pagination" },
+            PageClasses = new string[] { "page-link" }
+            })
+        </div>
+    </div> *@
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+        function Delete(id) {
+            if (confirm("Bạn có chắc xóa dòng này không ?")) {
+                $.ajax({
+                    url: '@Url.Action("Delete","Account")',
+                    type: "POST",
+                    data: { id: id },
+                    success: function (result) {
+                        location.reload();
+                    }
+                }
+                );
+            }
+        }
+        $(".acc_active").change(function () {
+            var accID = $(this).attr('id');
+            $.ajax({
+                url: '@Url.Action("Edit_Active","Account")',
+                type: "POST",
+                data: { id: accID },
+                success: function(){
+                    location.reload();
+                }
+            }
+            );
+
+        })
+    </script>
+}

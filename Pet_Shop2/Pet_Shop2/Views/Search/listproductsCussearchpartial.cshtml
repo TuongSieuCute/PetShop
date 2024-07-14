@@ -1,0 +1,56 @@
+﻿@using Pet_Shop2.Helper;
+@model List<Product>;
+
+@if(Model!=null && Model.Count()>0)
+{
+    @foreach (var item in Model)
+    {
+        <div class="product l-2-4 m-4 s-6">
+            <div class="product_border">
+                <div class="product_img"> <a href="~/cusproduct/detail/@item.Id"><img src="~/FolderImages/products/@item.Thumb" alt=""></a> </div>
+                <div class="product_detail">
+                    <a class="product_name" href="~/cusproduct/detail/@item.Id">@item.ProductName</a>
+
+                    @if (item.Price != null)
+                    {
+                        string price = Utilities.ToVND((double)item.Price);
+
+                        @if (item.Discount != null && item.Discount > 1 && item.Discount != 0)
+                        {
+                            <span class="product_price_sale">@price</span>
+                            double price_sale = (double)item.Price - (double)item.Price * ((double)item.Discount / 100);
+                            string price1 = Utilities.ToVND((double)price_sale);
+                            <span class="product_price">@price1</span>
+                        }
+                        else
+                        {
+                            <span class="product_price">@price</span>
+                        }
+                    }
+                    <div class="product_stars">
+                        @if(item.Star==null||item.Star<0)
+                        {
+                            <i class='bx bxs-star'></i>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < item.Star; i++)
+                            {
+                                <i class='bx bxs-star'></i>
+                            }
+                        }
+                        
+
+                    </div>
+                    <div data-id="@item.Id" class="addproduct product_cart">
+                        <i class='bx bx-cart'></i>
+                    </div>
+                </div>
+                @if (item.IsSale == true)
+                {
+                    <span class="sticky_sale">Giảm giá !</span>
+                }
+            </div>
+        </div>
+    }
+}

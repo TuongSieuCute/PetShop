@@ -1,0 +1,55 @@
+﻿@model Pet_Shop2.Models.Blog;
+
+@{
+    ViewData["Title"] = "Trang Blog";
+    var lstblog = ViewBag.ListBlog as List<Blog>;
+    Layout = "~/views/shared/_Layout.cshtml";
+}
+<div class="blog_detail margin-top">
+    <div class="blog_detail_container row-wrap">
+        <div class="blog_left l-8 m-12 s-12">
+            <div class="blog_img"><img src="~/FolderImages/blogs/@Model.Thumb" alt=""></div>
+            <h1 class="blog_title">@Model.Title</h1>
+            <div class="blog_comment">
+                <i class="bx bx-calendar"></i>
+                <p>@Model.CreatedDate.Value.ToString("dd/MM/yyyy")</p>
+                <i class="bx bx-comment-detail"></i>
+                <a href="">4 Comments</a>
+            </div>
+            @{
+                if (Model.Contents == null || Model.Contents == "")
+                {
+                    <p class="blog_para">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat.</p>
+                    <ol class="blog_list">
+                        <li>Nunc, mauris ut in vestibulum. Consectetur phasellus ultrices fusce nibh justo, venenatis, amet. Lectus quam in</li>
+                        <li>Most of the designer are very creative to do something , mauris ut in vestibulum. Consectetur phasellus ultrices fusce nibh justo, venenatis, amet. Lectus quam in lobortis</li>
+                        <li>There are two thing is very important in Consectetur phasellus ultrices fusce nibh justo, venenatis, amet. Lectus quam.</li>
+                        <li>Web design and development very creative to do something , mauris ut in vestibulum. Consectetur phasellus ultrices fusce nibh venenatis, amet to all design and development.</li>
+                    </ol>
+                }
+                else
+                {
+                    <div>
+                        @Html.Raw(@Model.Contents)
+                    </div>
+                }
+            }
+            
+        </div>
+        <div class="blog_right l-4 m-12 s-12">
+            <h3 class="blog_popular_title">Popular Posts</h3>
+            @foreach (var item in lstblog)
+            {
+                <a href="~/Cusblog/detail/@item.Id" class="blog_popular row-wrap">
+                    <div class="blog_popular_img l-4"><img src="~/FolderImages/blogs/@item.Thumb" alt=""></div>
+                    <div class="blog_popular_detail l-8">
+                        <h3>@item.Title</h3>
+                        <p>@item.CreatedDate.Value.ToString("dd/MM/yyyy")</p>
+                    </div>
+                </a>
+            }
+            
+            
+        </div>
+    </div>
+</div>

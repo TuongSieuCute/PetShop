@@ -1,0 +1,90 @@
+﻿@model Pet_Shop2.Models.Account
+
+@{
+    Layout = "~/views/shared/_Layout.cshtml";
+    ViewData["Title"] = "Tài khoản của tôi";
+}
+<div class="account_customer">
+    <div>
+        <div class="my_account row-wrap">
+            <div class="my_account_left l-3 m-12 s-12">
+                <div class="my_account_container">
+                    <div class="my_account_acc">
+                        <div class="account_img"><img src="~/Cus_assets/img/icons8-pet-64.png" alt=""></div>
+                        <h3 class="account_name">@Model.UserName</h3>
+                        <div class="account_email"><p>@Model.Email</p></div>
+                    </div>
+                    <div class="account_about">
+                        <h3 class="account_heading">Giới thiệu</h3>
+                        <p class="account_account_detail">I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="my_account_right l-9 m-12 s-12">
+                <div class="my_account_container">
+                    <div class="account_detail_personal">
+                        <h4 class="account_heading">Chi tiết khách hàng</h4>
+                        <div class="row">
+                            <div class="account_detail_left l-6 m-6 s-6">
+                                <div class="account_data_input">
+                                    <div><label for="">Họ và tên</label></div>
+                                    <input value="@Model.FullName" type="text">
+                                </div>
+                                <div class="account_data_input">
+                                    <div><label for="">Số điện thoại</label></div>
+                                    <input value="@Model.Phone" type="text">
+                                </div>
+                            </div>
+                            <div class="account_detail_right l-6 m-6 s-6">
+                                <div class="account_data_input">
+                                    <div><label for="">Email</label></div>
+                                    <input value="@Model.Email" type="text">
+                                </div>
+                                <div class="account_data_input">
+                                    <div><label for="">Website URL</label></div>
+                                    <input type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="account_detail_personal">
+                        <h4 class="account_heading">Personal Details</h4>
+                        <div class="row">
+                            <div class="account_detail_left l-6 m-6 s-6">
+                                <div class="account_data_input">
+                                    <div><label for="">Full name</label></div>
+                                    <input type="text">
+                                </div>
+                                <div class="account_data_input">
+                                    <div><label for="">Phone</label></div>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="account_detail_right l-6 m-6 s-6">
+                                <div class="account_data_input">
+                                    <div><label for="">Email</label></div>
+                                    <input type="text">
+                                </div>
+                                <div class="account_data_input">
+                                    <div><label for="">Website URL</label></div>
+                                    <input type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="account_function">
+            <div class="account_function_container">
+                <div><a class="account_function_link" href="/ordertracking/index">Xem danh sách đơn hàng đã đặt</a></div>
+                <div><a class="account_function_link" href="">Theo dõi đơn hàng</a></div>
+                <div><a class="account_function_link" href="/cus_account/changepassword">Đổi mật khẩu</a></div>
+                <div><a class="account_function_link" href="/cus_account/Logout">Đăng xuất</a></div>
+            </div>
+        </div>
+    </div>
+
+</div>

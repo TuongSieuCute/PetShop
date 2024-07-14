@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Pet_Shop2.Models.OrderDetail>
+@using Pet_Shop2.Helper;
+@using Pet_Shop2.Models;
+@{
+    List<Product>? products = ViewBag.lstProduct as List<Product>;
+    Layout = "~/views/shared/_Layout.cshtml";
+    ViewData["Title"] = "Chi tiết đơn hàng đã đặt";
+}
+
+@if (Model != null)
+{
+    
+    <div class="cart margin-top">
+        <h2 class="products_heading">Chi tiết các sản phẩm</h2>
+        <table class="cart_table">
+            <thead class="text-center table_head">
+                <tr>
+                    @*<td class="header_context_product"><a href="#" class="remove_all_product"><i class="bx bx-trash"></i></a></td>*@
+                    <td class="header_context_product" style="width:50px" >STT</td>
+                    <td class="header_context_product">Mã hàng</td>
+                    <td class="header_context_product">Sản phẩm</td>
+                    <td class="header_context_product">Số lượng</td>
+                    <td class="header_context_product">Tổng tiền</td>
+
+                </tr>
+            </thead>
+            <tbody class="table_body">
+                @{
+                    int index = 1;
+
+                    @foreach (var item in Model)
+                    {
+                        <tr class="table_row">
+                            @{
+                                var pro = products?.SingleOrDefault(x => x.Id == item.ProductId);
+                            }
+                            <td class="table_column_product text-center">@index</td>
+                            <td class="table_column_product text-center">@item.ProductId</td>
+                            <td class="table_column_product">
+                                <a class="table_product_detail" href="/cusproduct/Detail/@item.ProductId">
+                                    <img class="tbl_img_product" src="~/FolderImages/products/@pro?.Thumb" alt="">
+                                    <h3>@pro?.ProductName</h3>
+                                </a>
+                            </td>
+                            <td class="table_column_product text-center">@item.Quantity</td>
+                            <td class="table_column_product text-center">@Utilities.ToVND((double)@item.Total)</td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+            
+        </table>   
+    </div>
+    <div style="margin-top:25px" class="reorder padding-l-r">
+        <a class="btn_primary1" href="~/ordertracking/index">Quay lại</a>
+        <a class="btn_primary" href="#">Đặt lại đơn này</a>
+    </div>
+}

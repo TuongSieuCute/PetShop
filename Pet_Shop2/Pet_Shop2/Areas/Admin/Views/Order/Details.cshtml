@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Pet_Shop2.Models.OrderDetail>
+@using Pet_Shop2.Models;
+@using Pet_Shop2.Helper;
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var lstProduct = ViewBag.lstProduct as List<Product>;
+    var customer = ViewBag.CusOrder as Account;
+    var lstTransaction = ViewBag.Transaction as List<Transaction>;
+    var order = ViewBag.Order as Order;
+}
+<div class="card">
+
+    <div class="card-header">
+        <h3 class="card-title">@customer?.FullName | @customer?.Phone | @customer?.Email</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        @if (Model != null)
+        {
+            <div id="records_table">
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Mã sản phẩm</th>
+                            <th class="text-center">Tên sản phẩm</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-center">Giá</th>
+                            <th class="text-center">Tổng tiền</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{
+
+                            int index = 1;
+                            foreach (var item in Model)
+                            {
+                                var pro = lstProduct.SingleOrDefault(x => x.Id == item.ProductId);
+                                <tr>
+                                    <td class="align-middle text-center">@index</td>
+                                    <td class="align-middle text-center">@item.ProductId</td>
+                                    @{
+
+                                    }
+                                    <td class="align-middle">@pro?.ProductName</td>
+                                    <td class="align-middle text-center">@item.Quantity</td>
+                                    <td class="align-middle text-center">@Utilities.ToVND((double)pro?.Price) </td>
+                                    <td class="align-middle text-center">@Utilities.ToVND((double)item.Total) </td>
+                                </tr>
+
+                                index++;
+                            }
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td style="color:red;font-weight:700;" class="text-center">@Utilities.ToVND((double)Model.Sum(x=>x.Total))</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+            <form action="/admin/order/edit" method="post">
+                <input type="hidden" value="@order?.Id" name="orderID">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Trạng thái</label>
+                        @if (lstTransaction != null)
+                        {
+                            <select name="status" class="form-control">
+                                
+                                @foreach (var item in lstTransaction)
+                                {
+                                    if(order?.TransctStatusId==item.Id)
+                                    {
+                                        <option selected value="@item.Id">@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+
+                                }
+                            </select>
+                        }
+                    </div>
+                    <div class="col-6">
+                        <label>Thanh toán</label>
+                        <select name="paid" class="form-control">
+                            <option value="true" selected>Đã thanh toán</option>
+                            <option value="false">Chưa thanh toán</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div style="text-align:right; margin-top:15px">
+                    <button type="submit" class="btn btn-success">Cập nhật</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <h3>Không có dữ liệu</h3>
+        }
+
+    </div>
+    <!-- /.card-body -->
+</div>

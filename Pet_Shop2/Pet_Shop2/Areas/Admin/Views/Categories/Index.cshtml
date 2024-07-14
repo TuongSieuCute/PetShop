@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Category>
+@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+@{
+    ViewData["Title"] = "Loại sản phẩm";
+    Layout = "~/Areas/admin/views/shared/_AdminLayout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <a href="~/Admin/categories/Create" class="btn btn-success">Thêm mới</a>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="mytable" class="table table-bordred table-striped">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="checkall" /></th>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Ảnh</th>
+                    <th class="text-center">Tên loại</th>
+                    <th class="text-center">Tên hiển thị</th>
+                    <th class="text-center">Mô tả</th>
+                    <th class="text-center">Hoạt động</th>
+                    <th class="text-center">Thao tác</th>
+                    
+                </tr>
+
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                            <td class="text-center align-middle">@index</td>
+                            <td style="width:100px"><img style="width:100%;" src="~/FolderImages/Categories/@item.Image"/></td>
+                            <td class="text-center align-middle">@item.Name</td>
+                            <td class="text-center align-middle">@item.Title</td>
+                            <td class="align-middle">@item.Description</td>
+                            <td class="text-center align-middle">@Html.CheckBox("Active",@item.Published==true?true:false, new{})</td>
+                            <td class="text-center align-middle">
+                                <a href="~/Admin/categories/edit/@item.Id" class="btn btn-warning">Sửa</a> | 
+                                <button class="btn btn-danger" onclick="confirmDelete(@item.Id)">Xóa</button>
+                            </td>
+                           
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+    @* <div class="card-footer">
+        <div style="float:right;">
+            @Html.PagedListPager((IPagedList)Model,page=>Url.Action("Index",new{page=page}),
+            new X.PagedList.Mvc.Common.PagedListRenderOptions{
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.Never,
+            LinkToFirstPageFormat = "1",
+            LinkToPreviousPageFormat = "←",
+            LinkToNextPageFormat = "→",
+            MaximumPageNumbersToDisplay = 5,
+            DisplayItemSliceAndTotal = false,
+            LiElementClasses = new[] { "page-item" },
+            UlElementClasses = new string[] { "pagination" },
+            PageClasses = new string[] { "page-link" }
+            })
+        </div>
+    </div> *@
+</div>
+
+
+
+@section Scripts{
+    <script>
+        function confirmDelete(id) {
+            if (confirm("Bạn có muốn xóa dòng này không?")) {
+                var url = '@Url.Action("Delete", "categories")';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (result) {
+                        // Xử lý kết quả sau khi xóa thành công
+                        // Ví dụ: cập nhật danh sách dữ liệu
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+}

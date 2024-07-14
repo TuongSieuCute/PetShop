@@ -1,0 +1,325 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Product>
+@using Pet_Shop2.Models;
+@using Pet_Shop2.Helper;
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/views/shared/_layout.cshtml";
+    //Slider
+    var lstSlider = ViewBag.SliderHome as List<Slider>;
+    var lstCate = ViewBag.Category as List<Category>;
+    var lstBanner = ViewBag.Banner as List<Banner>;
+    var lstProductRecently = ViewBag.ProductRecently as List<Product>;
+    var lstProductSuggest = ViewBag.ProductSuggest as List<Product>;
+}
+<div class="Slider row margin-top">
+    <div class="container_slider l-8 m-8 s-12">
+        @if (lstSlider != null)
+        {
+            <div class="slider_intro owl-carousel owl-theme">
+                @foreach (var item in lstSlider)
+                {
+                    <div class="slider_item">
+                        <img src="~/FolderImages/Sliders/@item.Image" alt="">
+                        <div class="slider_item_detail">
+                            @*<span class="white-color">Get</span>
+                    <h3 class="slider_name white-color"> Food and Accessories</h3>
+                    <p class="white-color">Delicious food made with love</p>*@
+                            @{
+                                string position = "";
+                                if (item.Top.HasValue && item.Left.HasValue && item.Right.HasValue && item.Center.HasValue && item.Bottom.HasValue)
+                                {
+
+                                    if ((bool)item.Top && (bool)!item.Left && (bool)!item.Right) // trên giữa
+                                        position = "slide_item_detail-top";
+                                    else if ((bool)item.Top && (bool)item.Left && (bool)!item.Right) // trên trái
+                                        position = "slide_item_detail-top-left";
+                                    else if ((bool)item.Top && (bool)!item.Left && (bool)item.Right) // trên phải
+                                        position = "slide_item_detail-top-left";
+                                    else if ((bool)item.Center && (bool)!item.Left && (bool)!item.Right) // giữa giữa
+                                        position = "slide_item_detail-center";
+                                    else if ((bool)item.Center && (bool)item.Left && (bool)!item.Right) // giữa trái
+                                        position = "slide_item_detail-center-left";
+                                    else if ((bool)item.Center && (bool)!item.Left && (bool)item.Right) // giữa phải
+                                        position = "slide_item_detail-center-right";
+                                    else if ((bool)item.Bottom && (bool)!item.Left && (bool)!item.Right) // dưới giữa
+                                        position = "slide_item_detail-bottom";
+                                    else if ((bool)item.Bottom && (bool)item.Left && (bool)!item.Right) // dưới trái
+                                        position = "slide_item_detail-bottom-left";
+                                    else if ((bool)item.Bottom && (bool)!item.Left && (bool)item.Right) // dưới trái
+                                        position = "slide_item_detail-bottom-right";
+                                    else position = "slide_item_detail";
+                                }
+
+                            }
+                            <p class="@position">@item.Content</p>
+                            <a class="btn_shopnow" href="@item.Link">Tới thôi !</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+    @{
+        string? address1 = ""; // Khởi tạo biến address với giá trị mặc định là null
+        string? address2 = "";
+        if (lstBanner != null && lstBanner.Count > 0)
+        {
+            address1 = lstBanner[0]?.Image;
+            address2 = lstBanner[1]?.Image;
+        }
+    }
+
+    <div class="container_voucher l-4 m-4 s-12">
+        <a href="~/cusproduct/index" style="height: 49%;" class="voucher">
+            <img src="~/FolderImages/banners/@address1" alt="">
+        </a>
+        <a href="~/cusproduct/index" style="height: 49%;" class="voucher">
+
+            <img src="~/FolderImages/banners/@address2" alt="">
+        </a>
+    </div>
+</div>
+<div class="categories margin-top">
+    <h1 class="products_heading">Các loại sản phẩm</h1>
+    <div class="categories-carousel owl-carousel owl-theme">
+        @if (lstCate != null)
+        {
+            foreach (var item in lstCate)
+            {
+                <div class="cate_item">
+                    <div class="categories_item"><img src="~/FolderImages/Categories/@item.Image" alt=""></div>
+                    <h2 class="categories_name">@item.Name</h2>
+                </div>
+            }
+        }
+    </div>
+</div>
+<div class="products margin-top">
+    <h1 class="products_heading">Sản phẩm có sẳn</h1>
+    <div class="row-wrap">
+        @foreach (var item in Model)
+        {
+            <div class="product l-2-4 m-4 s-6">
+                <div class="product_border">
+                    <a href="~/cusproduct/detail/@item.Id" class="product_img"><img src="~/FolderImages/products/@item.Thumb" alt=""></a>
+                    <div class="product_detail">
+                        <h3 class="product_name">@item.ProductName</h3>
+                        @{
+                            @if (item.Price != null)
+                            {
+                                string price = Utilities.ToVND((double)item.Price);
+
+                                @if (item.Discount != null && item.Discount > 1 && item.Discount != 0)
+                                {
+                                    <span class="product_price_sale">@price</span>
+                                    double price_sale = (double)item.Price - (double)item.Price * ((double)item.Discount / 100);
+                                    string price1 = Utilities.ToVND((double)price_sale);
+                                    <span class="product_price">@price1</span>
+                                }
+                                else
+                                {
+                                    <span class="product_price">@price</span>
+                                }
+                            }
+
+                        }
+
+                        <div class="product_stars">
+                            @if (item.Star == null || item.Star < 0)
+                            {
+                                <i class='bx bxs-star'></i>
+                            }
+                            else
+                            {
+                                @for (int i = 0; i < item.Star; i++)
+                                {
+                                    <i class='bx bxs-star'></i>
+                                }
+                            }
+                            
+                       
+                        </div>
+                        <div data-id="@item.Id" class="addproduct product_cart">
+                            <i class='bx bx-cart'></i>
+                        </div>
+                    </div>
+                </div>
+                @if (item.IsSale == true)
+                {
+                    <span class="sticky_sale">Giảm giá !</span>
+                }
+            </div>
+        }
+
+
+    </div>
+</div>
+<div class="services margin-top">
+    <div style="background-image: url('/Cus_assets/img/imgs_backgrounds/bg2.jpg');" class="container_service">
+        <div class="service">
+            <div class="service_item s-6">
+                <img src="~/Cus_assets/img/imgs_backgrounds/icon1.png" alt="">
+                <h3 class="service_item_name">Siêu tiết kiệm</h3>
+            </div>
+            <div class="service_item s-6">
+                <img src="~/Cus_assets/img/imgs_backgrounds/icon2.png" alt="">
+                <h3 class="service_item_name">Giao hàng nhanh</h3>
+            </div>
+            <div class="service_item s-6">
+                <img src="~/Cus_assets/img/imgs_backgrounds/icon3.png" alt="">
+                <h3 class="service_item_name">Hỗ trợ 24//7</h3>
+            </div>
+            <div class="service_item s-6">
+                <img src="~/Cus_assets/img/imgs_backgrounds/icon4.png" alt="">
+                <h3 class="service_item_name">Thanh toán tiện lợi</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="products_special margin-top">
+    <h1 class="products_heading">Đề xuất cho bạn</h1>
+    <div class="product_container row-wrap">
+        @if (lstProductSuggest != null)
+        {
+            foreach (var item in lstProductSuggest)
+            {
+                <div class="product l-4 m-4 s-12">
+                    <div class="product_border">
+                        <a href="~/cusproduct/detail/@item.Id" class="product_img" style="height:unset"><img src="~/FolderImages/products/@item.Thumb" alt=""></a>
+                        <div class="product_detail">
+                            <h3 class="product_name">@item.ProductName</h3>
+                            @if (item.Price != null)
+                            {
+                                string price = Utilities.ToVND((double)item.Price);
+                                <span class="product_price_sale">@price</span>
+                                @if (item.Discount != null && item.Discount > 1 && item.Discount != 0)
+                                {
+                                    double price_sale = (double)item.Price - (double)item.Price * ((double)item.Discount / 100);
+                                    string price1 = Utilities.ToVND((double)price_sale);
+                                    <span class="product_price">@price1</span>
+                                }
+                            }
+                            <div class="product_stars">
+                                @for (int i = 0; i < item.Star; i++)
+                                {
+                                    <i class='bx bxs-star'></i>
+                                }
+
+
+                            </div>
+                            <div class="addproduct product_cart">
+                                <i class="bx bx-cart"></i>
+                            </div>
+
+                        </div>
+                        @if (item.IsSale == true)
+                        {
+                            <span class="sticky_sale">Giảm giá !</span>
+                        }
+                    </div>
+                </div>
+            }
+        }
+
+
+    </div>
+</div>
+<div class="banner_sale margin-top">
+    <div class="banner_container row">
+        @{
+            string address3 = ""; // Khởi tạo biến address với giá trị mặc định là null
+            string address4 = "";
+            if (lstBanner != null && lstBanner.Count > 0)
+            {
+                address3 = "/FolderImages/banners/" + lstBanner[2].Image;
+                address4 = "/FolderImages/banners/" + lstBanner[3].Image;
+            }
+        }
+        <a href="/cusproduct/index" class="banner_item l-6 m-6 s-12"><img src="@address3" alt=""></a>
+        <a href="/cusproduct/index" class="banner_item l-6 m-6 s-12"><img src="@address4" alt=""></a>
+    </div>
+</div>
+<div class="product_view margin-top">
+    <h1 class="products_heading">Sản phẩm được ưa chuộng</h1>
+    <div class="product-view owl-carousel owl-theme">
+        @if (lstProductRecently != null)
+        {
+            foreach (var item in lstProductRecently)
+            {
+                <div class="item">
+                    <a style="display:block" href="~/cusproduct/detail/@item.Id" class="item_img"><img src="~/FolderImages/products/@item.Thumb" alt=""></a>
+                    <ul class="items_detail">
+                        <li class="item_detail"><a href="#" data-id="@item.Id" class="addproduct item_link"><i class="bx bx-cart-alt"></i></a></li>
+                        <li class="item_detail"><a href="#" class="item_link item_like" data-id="@item.Id"><i class="bx bx-heart"></i></a></li>
+                        <li class="item_detail"><a href="~/cusproduct/detail/@item.Id" class="item_link"><i class="bx bx-show"></i></a></li>
+                        <li class="item_detail"><a href="~/cusproduct/detail/" data-id="@item.Id" class="item_link copy-link"><i class="bx bx-link-alt"></i></a></li>
+                    </ul>
+                </div>
+            }
+        }
+    </div>
+</div>
+@section Scripts{
+    <script>
+        // Xử lý sự kiện click trên liên kết "Copy Link"
+        $(".copy-link").click(function (e) {
+            e.preventDefault(); // Ngăn chặn trình duyệt mở liên kết
+
+            var baseUrl = window.location.href; // Lấy đường dẫn hiện tại
+            //baseUrl= baseUrl.split("/")[0];
+            var id = $(this).data("id"); // Lấy giá trị từ thuộc tính data-id của thẻ a
+            var link = baseUrl + "/cusproduct/detail/" + id;
+
+            var tempInput = $("<input>");
+            $("body").append(tempInput);
+            tempInput.val(link).select();
+            document.execCommand("copy");
+            tempInput.remove();
+            alert("Link đã được sao chép: " + link);
+        });
+        $(".item_like").click(function (e) {
+            e.preventDefault();
+            var message="Bạn đã thích sản phẩm này!";
+            var type ="success";
+            var proid = $(this).data("id");
+            $.ajax({
+                url: '/cusproduct/AddLikedproduct',
+                type: 'POST',
+                datatype:'json',
+                data: { id: proid },
+                success: function (data) {
+                    if(data.success)
+                    {
+                        Toastify({
+
+                            text: "Bạn vừa thích sản phẩm này !",
+                            close: true,
+                            duration: 2000,
+                            style: {
+                                background: "#28a745",
+                            },
+                            offset: {
+                                x: 0, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                                y: 70 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                            }
+
+                        }).showToast();
+                        
+                    }
+                    
+                    //location.href(`/home/index/?message=${message}&type=${type}`)
+                    /*$.ajax({
+                        url:'/home/index',
+                        type ='POST',
+                        data:{message:message,type:type},
+                    });*/
+                }
+            })
+        })
+
+        
+    </script>
+    <script src="~/cus_assets/js/shoppingcart.js"></script>
+}

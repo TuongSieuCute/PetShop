@@ -1,0 +1,77 @@
+﻿@using Pet_Shop2.Models;
+@model Account;
+@{
+    Layout = "";
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="~/Admin_assets/plugins/fontawesome-free/css/all.min.css">
+<!-- icheck bootstrap -->
+<link rel="stylesheet" href="~/Admin_assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/Admin_assets/dist/css/adminlte.min.css">
+
+<body class="hold-transition login-page">
+<div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <a href="~/Admin_assets/index2.html" class="h1"><b>Admin</b>PetShop</a>
+        </div>
+        <div class="card-body">
+            <p class="login-box-msg">Đăng nhập để bắt đầu quản lí</p>
+
+            <form action="/admin/login/index" method="post">
+                <div class="input-group mb-3">
+                   @* <input type="email"  class="form-control" placeholder="Email">*@
+                    @Html.TextBoxFor(x=>x.UserName,new {@class="form-control",@placeholder="Username" })
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                        @Html.TextBoxFor(x=>x.Password,new {@class="form-control",@placeholder="Username",@type="password" })
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-7">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">
+                                Nhớ mật khẩu
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-5">
+                        <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            
+            <!-- /.social-auth-links -->
+
+            <p class="mb-1">
+                <a href="forgot-password.html">Tôi quên mật khẩu</a>
+            </p>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+</body>
+<!-- jQuery -->
+<script src="~/Admin_assets/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/Admin_assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+@await Component.InvokeAsync("Notyf")

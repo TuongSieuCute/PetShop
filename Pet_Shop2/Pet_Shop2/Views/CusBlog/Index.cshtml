@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Blog>
+@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@{
+    ViewData["Title"] = "Blog";
+    Layout = "~/views/shared/_layout.cshtml";
+}
+<div class="blog margin-top">
+    <h1 class="products_heading">Tin tức</h1>
+    <div class="blog_items row-wrap">
+        @{
+            foreach (var item in Model)
+            {
+                <div class="blog_item l-4 m-4 s-12">
+                    <div class="blog_container">
+                        <a href="~/Cusblog/detail/@item.Id">
+                            <div class="blog_item_container_img">
+                                <img src="~/FolderImages/blogs/@item.Thumb" alt="">
+                                <div class="blog_date">
+                                    @if (item.CreatedDate.HasValue)
+                                    {
+                                        @item.CreatedDate.Value.ToString("dd/MM/yyyy")
+                                    }
+                                </div>
+                                <div class="views">Views:<span> @item.Views</span></div>
+                            </div>
+                            <h3 class="blog_categories">None</h3>
+                            <h1 class="blog_title">@item.Title</h1>
+                            <p class="blog_desc">@item.Scontents</p>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+@* <div class="product_nav margin-top margin-l-r">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+    new X.PagedList.Mvc.Common.PagedListRenderOptions
+    {
+    DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+    DisplayLinkToLastPage = PagedListDisplayMode.Never,
+    LinkToFirstPageFormat = "<i class='bx bxs-chevrons-left'></i>",
+    LinkToPreviousPageFormat = "<i class='bx bxs-chevrons-left'></i>",
+    LinkToNextPageFormat = "<i class='bx bxs-chevrons-right'></i>",
+    LinkToIndividualPageFormat = "{0}",
+    MaximumPageNumbersToDisplay = 5,
+    DisplayItemSliceAndTotal = false,
+    LiElementClasses = new[] { "page-item","page_nav" },
+    UlElementClasses = new string[] { "pagination","pagination_all" },
+    PageClasses = new string[] { "page-link","page_nav", "cosplay_nav_page" },
+    
+    })
+</div> *@
+@section Scripts{
+    
+}
+@*<div class="product_nav margin-top margin-l-r">
+    <a href="#" class="cosplay_nav_page"><i class="bx bxs-chevrons-left"></i></a>
+    <div class="nav_page">
+        <a href="#" class="page_nav cosplay_nav_page active_nav_page">1</a>
+        <a href="#" class="page_nav cosplay_nav_page">2</a>
+        <a href="#" class="page_nav cosplay_nav_page">3</a>
+    </div>
+    <a href="#" class="cosplay_nav_page"><i class="bx bxs-chevrons-right"></i></a>
+</div>*@

@@ -1,0 +1,99 @@
+﻿@model Pet_Shop2.Models.Account;
+@using Pet_Shop2.Models;
+@{
+    ViewData["Title"] = "Chỉnh sửa";
+    var rolelist = ViewBag.role as List<Role>;
+    Layout = "~/Areas/Admin/views/shared/_AdminLayout.cshtml";
+}
+<form action="~/Admin/Account/Edit" method="post">
+    <div class="row">
+        <div class="col-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.TextBoxFor(x=>x.Id,new {@type="hidden"})
+            <div class="form-group">
+                <label for="RoleName" class="control-label">Tên đầy đủ</label>
+                @Html.TextBoxFor(m=>m.FullName, new { @class = "form-control",@placeholder="Họ và tên" ,@required=true})
+            </div>
+            <div class="form-group">
+                <label for="RoleName" class="control-label">Email</label>
+                @Html.TextBoxFor(m=>m.Email, new {@type="email", @class = "form-control",@placeholder="Email",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Số điện thoại</label>
+                @Html.TextBoxFor(m=>m.Phone, new { @class = "form-control",@placeholder="Số điện thoại",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên tài khoản</label>
+                @Html.TextBoxFor(m=>m.UserName, new { @class = "form-control",@placeholder="Tên tài khoản",@required=true })
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <label class="control-label">Mật khẩu</label>
+                @Html.TextBoxFor(m=>m.Password, new {@id = "inputpassword1" ,@class= "form-control",@type="password",@placeholder="Mật khẩu",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Xác nhận mật khẩu</label>
+                @Html.TextBoxFor(m=>m.Password, new {@id = "inputpassword2", @class= "form-control",@type="password",@placeholder="Mật khẩu",@required=true })
+            </div>
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" id="customCheckbox0">
+                    <label for="customCheckbox0" class="custom-control-label">Hiện mật khẩu</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Vai trò</label>
+                <select name="RoleId" class="form-control select">
+                    @{
+                        if (rolelist != null)
+                        {
+                            foreach (var item in rolelist)
+                            {
+                                <option value="@item.Id">@item.RoleName</option>
+                            }
+                        }
+                    }
+
+                </select>
+            </div>
+            <div class="form-group row">
+                <label style="margin-left:10px" class="control-label">Trạng thái</label>
+                <div style="margin-left:15px" class="custom-control custom-checkbox">
+
+                    @*@Html.CheckBox("Active",true,new{@class="form-control custom-control-input",@id="customCheckbox2"})*@
+                    @{
+                        bool active = Model.Active ?? false;
+                    }
+                    @Html.CheckBox("Active", active ,new{@class="form-control custom-control-input",@id="customCheckbox2"})
+
+                    <label for="customCheckbox2" class="custom-control-label">Hoạt động</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Thay đổi</button>
+                <a class="btn btn-default" href="~/Admin/Account/index">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts{
+    <script>
+        $("#customCheckbox0").on("change", function () {
+            if ($(this).prop('checked') == true) {
+                $("#inputpassword1").attr("type","text")
+                $("#inputpassword2").attr("type","text");
+            }
+            else
+            {
+                $("#inputpassword1").attr("type", "password");
+                $("#inputpassword2").attr("type", "password");
+            }
+        })
+    </script>
+}

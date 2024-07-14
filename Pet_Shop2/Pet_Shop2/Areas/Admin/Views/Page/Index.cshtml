@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Pet_Shop2.Models.Page>
+@using Pet_Shop2.Models;
+@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@{
+    ViewData["Title"] = "Quản lí trang";
+    Layout = "~/Areas/Admin/views/shared/_AdminLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <a href="~/Admin/page/create" class="btn btn-success">Thêm mới</a>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        @if (Model != null)
+        {
+            <div id="records_table">
+                <table id="mytable" class="table table-bordred table-striped">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkall" /></th>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Ảnh</th>
+                            <th class="text-center">Tên trang</th>
+                            <th class="text-center">Tiêu đề</th>
+                            <th class="text-center">Mô tả</th>
+                            <th class="text-center">Hoạt động</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{
+
+                            int index = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle"><input type="checkbox" class="checkthis" /></td>
+                                    <td class="align-middle text-center">@index</td>
+                                    <td class="align-middle text-center" style="width:100px"><img style="width:100%;" src="~/FolderImages/pages/@item.Thumb" /></td>
+                                    <td class="align-middle text-center">@item.PageName</td>
+                                    <td class="align-middle text-center">@item.Title</td>
+                                    <td class="align-middle text-center">@item.Contents</td>
+                                    <td class="text-center align-middle">@Html.CheckBox("Published",@item.Published==true?true:false, new{})</td>
+                                    <td class="align-middle text-center">
+                                        <a class="btn btn-warning" href="~/Admin/page/edit/@item.Id">Sửa</a> |
+                                        <button class="btn btn-danger" onclick="Delete(@item.Id)" disabled>Xóa</button>
+                                    </td>
+                                </tr>
+
+                                index++;
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+
+        }
+        else
+        {
+            <h3>Không có dữ liệu</h3>
+        }
+
+    </div>
+    <!-- /.card-body -->
+    @* <div class="card-footer">
+        <div style="float:right;">
+            @Html.PagedListPager((IPagedList)Model,page=>Url.Action("Index",new{page=page}),
+            new X.PagedList.Mvc.Common.PagedListRenderOptions{
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.Never,
+            LinkToFirstPageFormat = "1",
+            LinkToPreviousPageFormat = "←",
+            LinkToNextPageFormat = "→",
+            MaximumPageNumbersToDisplay = 5,
+            DisplayItemSliceAndTotal = false,
+            LiElementClasses = new[] { "page-item" },
+            UlElementClasses = new string[] { "pagination" },
+            PageClasses = new string[] { "page-link" }
+            })
+        </div>
+
+    </div> *@
+</div>
+@section Scripts{
+    <script>
+        function Delete(id) {
+            if (confirm("Bạn có chắc xóa dòng này không ?")) {
+                $.ajax({
+                    url: '@Url.Action("Delete","page")',
+                    type: "POST",
+                    data: { id: id },
+                    success: function (result) {
+                        // Xử lý kết quả sau khi xóa thành công
+                        // Ví dụ: cập nhật danh sách dữ liệu
+                        location.reload();
+                    }
+                }
+                );
+            }
+        }
+    </script>
+}

@@ -1,0 +1,285 @@
+﻿@model Pet_Shop2.Models.Product
+@using Pet_Shop2.Models;
+@{
+    ViewData["Title"] = "Thêm mới sản phẩm";
+    var categorieslst = ViewBag.categories as List<Category>;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Linkheader{
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/Admin_assets/plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="~/Admin_assets/plugins/ekko-lightbox/ekko-lightbox.css">
+}
+<!-- Tabs content -->
+<div class="row">
+    <div class="col-12">
+        <form action="~/Admin/Products/Create" enctype="multipart/form-data" method="post">
+            <div class="card mt-3 tab-card">
+                <div class="card-header tab-card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Hình ảnh</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Mô tả</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="three-tab" data-toggle="tab" href="#three" role="tab" aria-controls="Three" aria-selected="false">Phương thức</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="customFile">Ảnh đại diện</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="imageFile" name="fThumb" accept="image/*" required">
+                                        <label class="custom-file-label" for="customFile">Chọn ảnh</label>
+                                    </div>
+                                    <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                                    <div><img style="width:50%;" src="~/FolderImages/Categories/1categories.png" id="imagePreview" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ProductName" class="control-label">Tên sản phẩm</label>
+                                    @Html.TextBoxFor(x=>x.ProductName,new{@class="form-control",@placeholder="Tên sản phẩm"})
+                                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CategoryId" class="control-label">Loại sản phẩm</label>
+                                    <select name="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                                        @{
+                                            if (categorieslst != null)
+                                            {
+                                                foreach (var item in categorieslst)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Giá sản phẩm</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i>
+                                            </span>
+                                        </div>
+                                        @Html.TextBoxFor(x=>x.Price,new {@class="form-control",@type="number"})
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="Discount" class="control-label">Số lượng</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x=>x.Quantity,new {@class="form-control",@type="number"})
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Discount" class="control-label">Giảm giá</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x=>x.Discount,new {@class="form-control",@type="number"})
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        @Html.CheckBox("Active",true, new{@class="custom-control-input",@id="customSwitch1"})
+                                        <label class="custom-control-label" for="customSwitch1">Hoạt động</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        @Html.CheckBox("IsHot",false, new{@class="custom-control-input",@id="customSwitch2"})
+                                        @*<input type="checkbox" class="custom-control-input" id="customSwitch1">*@
+                                        <label class="custom-control-label" for="customSwitch2">Nổi bật</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        @Html.CheckBox("IsSale",false, new{@class="custom-control-input",@id="customSwitch3"})
+                                        @*<input type="checkbox" class="custom-control-input" id="customSwitch1">*@
+                                        <label class="custom-control-label" for="customSwitch3">Giảm giá</label>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x=>x.Description,new{@id="summernote",@placeholder="Mô tả sản phẩm"})
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ShortDesc" class="control-label">Mô tả ngắn</label>
+                                    @Html.TextAreaFor(x=>x.ShortDesc,new {@class="form-control"})
+                                    <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Meta Key</label>
+                                    @Html.TextAreaFor(x=>x.MetaKey,new {@class="form-control"})
+                                    <span asp-validation-for="MetaKey" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Meta Desc</label>
+                                    @Html.TextAreaFor(x=>x.MetaDesc,new {@class="form-control"})
+                                    <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
+                    </div>
+
+                </div>
+            </div>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h4 class="card-title">Các hình ảnh liên quan đến sản phẩm</h4>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="exampleInputFile">Các hình ảnh liên quan</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input multiple type="file" class="custom-file-input" id="inputfileImage" name="childImage">
+                                <label class="custom-file-label" for="inputfileImage">Chọn file</label>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text">Tải ảnh lên</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <div class="btn-group w-100 mb-2">
+                                <a class="btn btn-info active" href="javascript:void(0)" data-filter="all">Tất cả các hình </a>
+                            </div>
+                            <div class="mb-2">
+                                <a class="btn btn-secondary" href="javascript:void(0)" data-shuffle> Xáo trộn hình ảnh </a>
+                                <div class="float-right">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" href="javascript:void(0)" data-sortAsc> Tăng dần </a>
+                                        <a class="btn btn-default" href="javascript:void(0)" data-sortDesc> Giảm dần</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div id='container_image_child' class='filter-container p-0 row'>
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Thêm mới</button>
+                <a class="btn btn-default">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <!--Thư viện xem trước hình ảnh-->
+    <script src="~/Admin_assets/plugins/filterizr/jquery.filterizr.min.js"></script>
+    <script src="~/Admin_assets/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/Admin_assets/plugins/summernote/summernote-bs4.min.js"></script>
+    <script>
+
+
+        //Hiển thị ảnh chính
+        $("#imageFile").on("change", function (event) {
+            var filename = $(this).val().split("\\").pop();
+            $(".custom-file-label").html(filename);
+
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var imageURL = URL.createObjectURL(input.files[0]);
+                $('#imagePreview').attr('src', imageURL);
+                $('#imagePreview').show();
+            }
+
+        });
+        //Hiển thị ảnh liên quan
+        $(function () {
+            // Summernote
+            $('#summernote').summernote({
+                height: 200
+            });
+        });
+        $('#inputfileImage').on('change', function (event) {
+            // Lấy danh sách các tệp tin được chọn
+            const files = event.target.files;
+            // Lấy phần tử hiển thị danh sách ảnh đã chọn
+            const selectedImagesContainer = $('#container_image_child');
+
+            let htmlString = ''; // Chuỗi HTML để lưu trữ các thẻ
+            for (let i = 0; i < files.length; i++) {
+                // Lấy đường dẫn tạm thời của ảnh
+                const imageURL = URL.createObjectURL(files[i]);
+
+                // Tạo chuỗi HTML tương tự như trong mã HTML đã cho
+                const itemHTML = `
+                                        <div class="filtr-item col-sm-2" data-category="${i}" data-sort="${i}">
+                                    <a href="${imageURL}" data-toggle="lightbox" data-title="sample ${i} - black">
+                                        <img src="${imageURL}" style="height:100px" class="img-fluid mb-2" alt="black sample" />
+                                    </a>
+                                </div>
+                            `;
+
+                // Thêm chuỗi HTML vào chuỗi chứa các thẻ
+                htmlString += itemHTML;
+            }
+            // Xóa nội dung cũ của phần tử hiển thị danh sách ảnh đã chọn
+            selectedImagesContainer.empty();
+            // Thêm chuỗi HTML vào selectedImagesContainer
+            selectedImagesContainer.append(htmlString);
+
+            $(function () {
+                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+                    event.preventDefault();
+                    $(this).ekkoLightbox({
+                        alwaysShowClose: true
+                    });
+                });
+
+                $('.filter-container').filterizr({ gutterPixels: 3 });
+                $('.btn[data-filter]').on('click', function () {
+                    $('.btn[data-filter]').removeClass('active');
+                    $(this).addClass('active');
+                });
+            });
+        });
+
+
+    </script>
+}

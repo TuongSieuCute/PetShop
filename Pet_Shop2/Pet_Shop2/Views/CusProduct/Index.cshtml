@@ -1,0 +1,131 @@
+﻿@using Pet_Shop2.Helper;
+@using X.PagedList;
+@* @using X.PagedList.Mvc.Common; *@
+@using X.PagedList.Mvc.Core;
+@using Pet_Shop2.Models;
+@model IEnumerable<Pet_Shop2.Models.Product>
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+    Layout = "~/views/shared/_Layout.cshtml";
+}
+<div class="search  margin-top">
+    <p class="result_content">Chúng tôi tìm thấy <span class="result_sum">@Model.Count()</span> sản phẩm phù hợp cho bạn</p>
+    <form class="form_search" action="">
+        <input id="keyword" placeholder="Điền tên sản phẩm bạn muốn tìm" class="search_product" type="text">
+        <button class="btn_search_product" type="submit"><i class='bx bx-search'></i></button>
+    </form>
+    <div class="orderby_products">
+        <p>Sắp xếp: </p>
+        <select name="orderby" id="orderby">
+            <option value="0">Mặc định</option>
+            <option value="1">Phổ biến nhất</option>
+            <option value="2">Mới nhất</option>
+            <option value="3">Giá: Cao đến thấp</option>
+            <option value="4">Giá: Thấp đến cao</option>
+        </select>
+    </div>
+</div>
+<div class="product_shop margin-top">
+    <div class="container_product_shop row-wrap">
+        @foreach(var item in Model)
+        {
+            <div class="product l-2-4 m-4 s-6">
+                <div class="product_border">
+                    <div class="product_img"> <a href="~/cusproduct/detail/@item.Id"><img src="~/FolderImages/products/@item.Thumb" alt=""></a> </div>
+                    <div class="product_detail">
+                        <a class="product_name" href="~/cusproduct/detail/@item.Id">@item.ProductName</a>
+                        <h4 style="font-size:12px"> Loại sản phẩm: @item?.Category?.Name</h4>
+                        @if (item.Price != null)
+                        {
+
+                            string price = Utilities.ToVND((double)item.Price);
+
+                            @if (item.Discount != null && item.Discount > 1 && item.Discount != 0)
+                            {
+                                <span class="product_price_sale">@price</span>
+                                double price_sale = (double)item.Price - (double)item.Price * ((double)item.Discount / 100);
+                                string price1 = Utilities.ToVND((double)price_sale);
+                                <span class="product_price">@price1</span>
+                            }
+                            else
+                            {
+                                <span class="product_price">@price</span>
+                            }
+                        }
+                        <div class="product_stars">
+                            @if (item.Star == null || item.Star < 0)
+                            {
+                                <i class='bx bxs-star'></i>
+                            }
+                            else
+                            {
+                                @for (int i = 0; i < item.Star; i++)
+                                {
+                                    <i class='bx bxs-star'></i>
+                                }
+                            }
+                            
+                           @* <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star-half'></i>*@
+                        </div>
+                        <div data-id="@item.Id" class="addproduct product_cart">
+                            <i class='bx bx-cart'></i>
+                        </div>
+                    </div>
+                    @if (item.IsSale == true)
+                    {
+                        <span class="sticky_sale">Giảm giá !</span>
+                    }
+                </div>
+            </div>
+        }
+        
+       
+    </div>
+</div>
+
+@* <div class="product_nav margin-top margin-l-r">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }),
+    new X.PagedList.Mvc.Common.PagedListRenderOptions
+    {
+    DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+    DisplayLinkToLastPage = PagedListDisplayMode.Never,
+    LinkToFirstPageFormat = "<i class='bx bxs-chevrons-left'></i>",
+    LinkToPreviousPageFormat = "<i class='bx bxs-chevrons-left'></i>",
+    LinkToNextPageFormat = "<i class='bx bxs-chevrons-right'></i>",
+    LinkToIndividualPageFormat = "{0}",
+    MaximumPageNumbersToDisplay = 5,
+    DisplayItemSliceAndTotal = false,
+    LiElementClasses = new[] { "page-item","page_nav" },
+    UlElementClasses = new string[] { "pagination","pagination_all" },
+    PageClasses = new string[] { "page-link","page_nav", "cosplay_nav_page" },
+
+    })
+</div> *@
+@section Scripts{
+    <script src="~/cus_assets/js/shoppingcart.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#keyword").keyup(function () {
+                var strkeyword = $("#keyword").val();
+                var condition = $(orderby).val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/Search/FindProductCus/',
+                    data: { keyword: strkeyword,condition:condition},
+                    success: function (results) {
+                        $(".container_product_shop").html("");
+                        //console.log(results);
+                        $(".container_product_shop").html(results);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error:", error);
+                        // Xử lý lỗi ở đây nếu cần thiết
+                    }
+                });
+            });
+        })
+    </script>
+}

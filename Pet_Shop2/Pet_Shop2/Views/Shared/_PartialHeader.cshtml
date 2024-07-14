@@ -1,0 +1,86 @@
+﻿@{
+    @*var cus = ViewBag.Acc as string;
+    var CusID = ViewBag.CusID as string;*@
+
+    var account = ViewBag.Acc as Account;
+}
+<div class="header_name">
+    <img src="~/Cus_assets/img/white-logo.png" alt="">
+</div>
+<ul class="header_pages">
+    <li class="header_page header_page_list">
+        <a href="#" class="header_link"><i class='bx bx-menu'></i> Các loại SP</a>
+        <ul class="page_list">
+            <li><a href="/Cusproduct/?idCate=1">Thuốc điều trị</a></li>
+            <li><a href="/Cusproduct/?idCate=2">Đồ chơi </a></li>
+            <li><a href="/Cusproduct/?idCate=5">Quần áo</a></li>
+            <li><a href="/Cusproduct/?idCate=4">Dụng cụ cho thú cưng</a></li>
+            <li><a href="/Cusproduct/?idCate=3">Thức ăn</a></li>
+
+        </ul>
+        <div class="page_list_close"><i class='bx bx-x'></i></div>
+    </li>
+    <li class="header_page"><a href="~/Home/index" class="header_link">Trang chủ</a></li>
+    <li class="header_page header_page_list">
+        <a href="#" class="header_link">Các trang <i class='bx bx-chevron-down'></i></a>
+        <ul class="page_list">
+            <li><a href="/shoppingcart/index">Danh sách đơn hàng</a></li>
+            <li><a href="/ordertracking/index">Danh sách đã mua</a></li>
+            <li><a href="/myaccount/index">Tài khoản của tôi</a></li>
+            <li><a href="#">Thăm khám và điều trị thú cưng</a></li>
+            <li><a href="#">Page Demo</a></li>
+        </ul>
+        <div class="page_list_close"><i class='bx bx-x'></i></div>
+    </li>
+    <li class="header_page"><a href="~/cusproduct/index" class="header_link">Shop</a></li>
+    <li class="header_page"><a href="~/cusBlog/index" class="header_link">Tin tức</a></li>
+    <li class="header_page"><a href="~/Contact/index" class="header_link">Liên hệ</a></li>
+</ul>
+<div class="header_account">
+    @if (User.Identity.IsAuthenticated && account?.Id != null)
+    {
+        <a href="~/myaccount/index" style="color:#fff;text-decoration:none">@account.UserName</a>
+    }
+    
+
+    <div class="header_acc">
+        <a href="~/myaccount/index" style="text-decoration:none"><i class='bx bx-user-circle header_icon'></i></a>
+        @if (User.Identity.IsAuthenticated && account?.Id != null)
+        {
+            
+            <ul class="account">
+                <li><a href="~/myaccount/index">Tài khoản của bạn</a></li>
+                <li><a href="~/cus_account/Logout">Đăng xuất</a></li>
+            </ul>
+           
+        }
+        else 
+
+        {
+            <ul class="account">
+                <li><a href="~/cus_account/login">Đăng nhập</a></li>
+                <li><a href="~/cus_account/register">Đăng ký</a></li>
+            </ul>
+        }
+
+    </div>
+    <div id="cart-container">
+        @*<div class="header_cart">
+            <a href="~/ShoppingCart/Index"><i class='bx bx-cart-alt header_icon'></i></a>
+        </div>*@
+        @await Component.InvokeAsync("NumberCart")
+    </div>
+    
+    
+</div>
+<div class="header_menu">
+    <i class='bx bx-dots-horizontal-rounded'></i>
+    <i class='bx bx-menu'></i>
+</div>
+
+
+
+
+
+
+

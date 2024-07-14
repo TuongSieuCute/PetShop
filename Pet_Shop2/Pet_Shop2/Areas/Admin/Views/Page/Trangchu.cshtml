@@ -1,0 +1,418 @@
+﻿@model List<Pet_Shop2.Areas.Admin.Models.CartSlider>
+@{
+    ViewData["Title"] = "Quản lí trang chủ";
+    Layout = "~/Areas/Admin/views/shared/_AdminLayout.cshtml";
+}
+@section Linkheader{
+    <link rel="stylesheet" href="~/Cus_assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/Cus_assets/css/owl.theme.default.min.css">
+}
+<style>
+    .slider_item {
+        position: relative;
+    }
+
+    .slider_item_detail {
+        width: 40%;
+        position: absolute;
+        top: 30%;
+        left: 20px;
+        transform: translateY(-30%);
+    }
+
+    .slide_item_detail-top {
+        position: absolute;
+        width: 40%;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .slide_item_detail-top-left {
+        width: 40%;
+        position: absolute;
+        top: 10%;
+        left: 20px;
+        transform: translateY(-30%);
+    }
+
+    .slider_item_detail-top-right {
+        width: 40%;
+        position: absolute;
+        top: 10%;
+        right: 20px;
+        text-align: right;
+    }
+
+    .slide_item_detail-bottom {
+        width: 40%;
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .slide_item_detail-bottom-left {
+        width: 40%;
+        position: absolute;
+        bottom: 10%;
+        left: 20px;
+        text-align: left;
+    }
+
+    .slider_item_detail-bottom-right {
+        width: 40%;
+        position: absolute;
+        bottom: 10%;
+        right: 20px;
+        text-align: right;
+    }
+
+    .slide_item_detail-center {
+        width: 40%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        text-align: center;
+    }
+
+    .slide_item_detail-center-left {
+        width: 40%;
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        text-align: left;
+    }
+
+    .slider_item_detail-center-right {
+        width: 40%;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        text-align: right;
+    }
+
+    .form-check {
+        margin: 0px 5px;
+    }
+</style>
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Chỉnh sửa trang chủ</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <label for="customFile">Ảnh đại diện</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="imageFile" accept="image/*" multiple required>
+                            <label class="custom-file-label" for="customFile">Chọn ảnh</label>
+                        </div>
+                    </form>
+
+                    @if (Model != null)
+                    {
+                        <div class="slider_intro owl-carousel owl-theme" style="margin-top:20px">
+                            @foreach (var item in Model)
+                            {
+                                <div class="slider_item">
+                                    <img src="~/FolderImages/Sliders/@item.image" alt="">
+                                    <div class="slider_item_detail">
+                                        @*<span class="white-color">Get</span>
+                                <h3 class="slider_name white-color"> Food and Accessories</h3>
+                                <p class="white-color">Delicious food made with love</p>*@
+                                        @{
+                                            string position = "";
+                                            if (item.top && !item.left && !item.right) // trên giữa
+                                                position = "slide_item_detail-top";
+                                            else if (item.top && item.left && !item.right) // trên trái
+                                                position = "slide_item_detail-top-left";
+                                            else if (item.top && !item.left && item.right) // trên phải
+                                                position = "slide_item_detail-top-left";
+                                            else if (item.center && !item.left && !item.right) // giữa giữa
+                                                position = "slide_item_detail-center";
+                                            else if (item.center && item.left && !item.right) // giữa trái
+                                                position = "slide_item_detail-center-left";
+                                            else if (item.center && !item.left && item.right) // giữa phải
+                                                position = "slide_item_detail-center-right";
+                                            else if (item.bottom && !item.left && !item.right) // dưới giữa
+                                                position = "slide_item_detail-bottom";
+                                            else if (item.bottom && item.left && !item.right) // dưới trái
+                                                position = "slide_item_detail-bottom-left";
+                                            else if (item.bottom && !item.left && item.right) // dưới trái
+                                                position = "slide_item_detail-bottom-right";
+                                            else position = "slide_item_detail";
+                                        }
+                                        <p class="@position">@item.content</p>
+                                        <a class="btn_shopnow" target="_blank" href="@item.link">Tới nhanh</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+            <!-- /.col -->
+
+            <div class="col-6">
+                <label>Các slider</label>
+                <form id="detailSlider" action="~/Admin/page/AddToDetailSlider" method="post">
+                    @if (Model != null)
+                    {
+                        int i = 0;
+                        foreach (var item in Model)
+                        {
+                            <div class="form-group">
+                                <div class="container_slider">
+                                    <div><label>Thứ tự <span>1</span></label></div>
+                                    <input type="hidden" name="sliders[@i].index" value="@item.index">
+                                    <input type="hidden" name="sliders[@i].image" value="@item.image">
+                                    <div class="row">
+                                        <div class="col-3"><img style="width:100%" src="~/FolderImages/Sliders/@item.image" /></div>
+                                        <textarea name="sliders[@i].content" class="form-control col-9" placeholder="Nội dung slider" style="width:100%" rows="3">@item.content</textarea>
+                                    </div>
+                                    <div>
+                                        <label>Đường liên kết</label>
+                                        <input name="sliders[@i].link" type="text" class="form-control" value="@item.link">
+                                    </div>
+                                    <div>
+                                        <label>Vị trí</label>
+                                        <div class="row justify-content-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="sliders[@i].top" id="top-@i" value="true" @(item.top ? "checked" : "")>
+                                                <label class="form-check-label" for="top-@i">
+                                                    Trên
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="sliders[@i].center" id="center-@i" value="true" @(item.center ? "checked" : "")>
+                                                <label class="form-check-label" for="center-@i">
+                                                    Giữa
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="sliders[@i].bottom" id="bottom-@i" value="true" @(item.bottom ? "checked" : "")>
+                                                <label class="form-check-label" for="bottom-@i">
+                                                    Dưới
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sliders[@i].left" id="left-@i" value="true" @(item.left ? "checked" : "")>
+                                            <label class="form-check-label" for="left-@i">
+                                                Trái
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sliders[@i].right" id="right-@i" value="true" @(item.right ? "checked" : "")>
+                                            <label class="form-check-label" for="right-@i">
+                                                Phải
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            i++;
+                        }
+                    }
+                    <button type="submit" class="btn btn-primary" id="SliderPreview">Xem trước</button>
+                </form>
+
+            </div>
+            <div class="btn_slider" style="margin-top:20px">
+                <a href="~/admin/page/index" class="btn btn-info" for="imagePreview">Quay lại</a>
+                <a href="~/admin/page/changeSlider" class="btn btn-success">Thay đổi</a>
+            </div>
+        </div>
+
+
+        <!-- /.row -->
+    </div>
+</div>
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Chỉnh sửa banner trang chủ</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="formBanner" action="/admin/page/SaveBanner" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="customFile">Ảnh banner 1</label>
+                        <div class="custom-file">
+                            <input type="file" name="files" class="custom-file-input" id="imageFile1" accept="image/*" required>
+                            <label class="custom-file-label" for="customFile1">Chọn ảnh</label>
+                        </div>
+                        <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                        <div><img style="width:50%;" src="~/FolderImages/Categories/1categories.png" id="imagePreview1" /></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customFile">Ảnh banner 2</label>
+                        <div class="custom-file">
+                            <input type="file" name="files" class="custom-file-input" id="imageFile2" accept="image/*" required>
+                            <label class="custom-file-label" for="customFile2">Chọn ảnh</label>
+                        </div>
+                        <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                        <div><img style="width:50%;" src="~/FolderImages/Categories/1categories.png" id="imagePreview2" /></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customFile">Ảnh banner 3</label>
+                        <div class="custom-file">
+                            <input type="file" name="files" class="custom-file-input" id="imageFile3" accept="image/*" required>
+                            <label class="custom-file-label" for="customFile3">Chọn ảnh</label>
+                        </div>
+                        <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                        <div><img style="width:50%;" src="~/FolderImages/Categories/1categories.png" id="imagePreview3" /></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customFile">Ảnh banner 4</label>
+                        <div class="custom-file">
+                            <input type="file" name="files" class="custom-file-input" id="imageFile4" accept="image/*" required>
+                            <label class="custom-file-label" for="customFile4">Chọn ảnh</label>
+                        </div>
+                        <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                        <div><img style="width:50%;" src="~/FolderImages/Categories/1categories.png" id="imagePreview4" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="~/admin/page/index" class="btn btn-info">Quay lại</a>
+            <button class="btn btn-success" type="submit">Thay đổi</button>
+
+        </form>
+        
+    </div>
+
+</div>
+@section Scripts{
+    <script src="~/Cus_assets/JS/owl.carousel.min.js"></script>
+    <script>
+        $(".slider_intro").owlCarousel({
+            autoplay: true,
+            autoplayTimeout: 3500,
+            loop: true,
+            margin: 3,
+            nav: false,
+            dots: false,
+            responsive: {
+                320: {
+                    items: 1
+                },
+                600: {
+                    items: 1
+                },
+                1000: {
+                    items: 1
+                }
+            }
+        });
+
+        const inputElement = document.getElementById("imageFile");
+
+        // Sử dụng sự kiện change để theo dõi khi người dùng chọn tệp tin
+        inputElement.addEventListener("change", function (e) {
+            // Lấy danh sách các tệp tin được chọn
+            const selectedFiles = e.target.files;
+
+            // Kiểm tra xem có tệp tin nào được chọn không
+            if (selectedFiles.length > 0) {
+                // Tạo một đối tượng FormData
+                const formData = new FormData();
+
+                // Thêm các tệp tin vào FormData
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    formData.append("addressimage", selectedFiles[i]);
+                }
+
+                // Sử dụng Ajax để gửi FormData đến máy chủ
+                $.ajax({
+                    url: '/Admin/Page/AddToImageSlider',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        window.location.href = "/Admin/Page/Trangchu";
+                        //location.reload();
+                    }
+                });
+            }
+        });
+
+
+        $("#SliderPreview").click(function (e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của form
+
+            // Tạo một đối tượng FormData từ form
+            var formData = new FormData($("#detailSlider")[0]);
+            console.log(formData)
+            // Gửi dữ liệu bằng AJAX
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddToDetailSlider", "Page")",
+                data: formData,
+                processData: false,  // Không xử lý dữ liệu FormData
+                contentType: false,  // Không đặt Content-Type, để trình duyệt tự định dạng
+                dataType: "json",
+                success: function (response) {
+                    // Xử lý kết quả ở đây nếu cần
+                    if (response.success) {
+                        // Thành công, thực hiện các hành động sau khi gửi dữ liệu thành công
+                        window.location.href = "/Admin/Page/Trangchu";
+                    } else {
+                        // Xử lý lỗi nếu có
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                }
+            });
+        });
+
+
+        $(".custom-file-input").on("change", function (event) {
+            var input = event.target;
+            var filename = input.files[0].name;
+            var imagePreviewId = $(this).attr('id').replace('imageFile', 'imagePreview');
+
+            $(".custom-file-label[for='" + input.id + "']").html(filename);
+
+            if (input.files && input.files[0]) {
+                var imageURL = URL.createObjectURL(input.files[0]);
+                $('#' + imagePreviewId).attr('src', imageURL);
+                $('#' + imagePreviewId).show();
+            }
+        });
+        
+    </script>
+}

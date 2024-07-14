@@ -1,0 +1,14 @@
+﻿@model int
+@if(Model>0)
+{
+    <div class="header_cart">
+        <a href="~/ShoppingCart/Index"><i class='bx bx-cart-alt header_icon'></i></a>
+        <a href="~/ShoppingCart/Index" class="container_quantity"><span class="quantity_cart">@Model</span></a>
+    </div>
+}
+else
+{
+    <div class="header_cart">
+        <a href="~/ShoppingCart/Index"><i class='bx bx-cart-alt header_icon'></i></a>
+    </div>
+}

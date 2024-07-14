@@ -1,0 +1,81 @@
+﻿@model Pet_Shop2.Models.Category;
+
+@{
+    ViewData["Title"] = "Chỉnh sửa loại sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<form action="~/Admin/categories/Edit" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <div class="col-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.TextBoxFor(x=>x.Id,new{type="hidden"})
+            <input id="checkchange" name="checkchange" value="false" type="hidden"/>
+            <div class="form-group">
+                <label for="customFile">Ảnh đại diện</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="imageFile" name="imageFile" accept="image/*">
+                    <label class="custom-file-label" for="customFile">@Model.Image</label>
+                </div>
+                <label style="margin-top:20px" for="imagePreview">Xem trước</label>
+                <div><img style="width:50%;" src="~/FolderImages/Categories/@Model.Image" id="imagePreview" /></div>
+            </div>
+            <div class="form-group">
+                <label for="RoleName" class="control-label">Tên loại sản phẩm</label>
+                @Html.TextBoxFor(m=>m.Name, new {@type="text", @class = "form-control",@placeholder="Tên loại",@required=true })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên hiển thị</label>
+                @Html.TextBoxFor(m=>m.Title, new { @class = "form-control",@placeholder="Tên hiển thị",@required=true })
+            </div>
+
+
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <label class="control-label">Mô tả</label>
+                @Html.TextAreaFor(m=>m.Description, new {@class = "form-control",@type="text",@placeholder="Mô tả loại sản phẩm",@required=true,@rows=5 })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Alias</label>
+                @Html.TextBoxFor(m=>m.Alias, new {@class = "form-control",@type="text",@placeholder="Alias",@required=true })
+            </div>
+            <div class="form-group row">
+                <label style="margin-left:10px" class="control-label">Trạng thái</label>
+                <div style="margin-left:15px" class="custom-control custom-checkbox">
+                    @*<input name="Active" class="form-control custom-control-input" type="checkbox" id="customCheckbox2" checked="checked">*@
+                    @Html.CheckBox("Published",true,new{@class="form-control custom-control-input",@id="customCheckbox2"})
+                    <label for="customCheckbox2" class="custom-control-label">Hoạt động</label>
+                </div>
+                @*@Html.TextBoxFor(m=>m.Password, new { @class = "form-control",@type="checkbox",@placeholder="Trạng thái" })*@
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Chỉnh sửa</button>
+                <a class="btn btn-default" href="~/Admin/categories/index">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".custom-file-input").on("change", function (event) {
+                var filename = $(this).val().split("\\").pop();
+                $(".custom-file-label").html(filename);
+                $("#checkchange").val("true");
+                var input = event.target;
+                if (input.files && input.files[0]) {
+                    var imageURL = URL.createObjectURL(input.files[0]);
+                    $('#imagePreview').attr('src', imageURL);
+                    $('#imagePreview').show();
+                }
+
+            })
+        });
+    </script>
+
+}

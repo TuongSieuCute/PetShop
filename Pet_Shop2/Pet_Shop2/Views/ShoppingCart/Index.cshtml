@@ -1,0 +1,174 @@
+﻿@using Pet_Shop2.Helper;
+@model List<Pet_Shop2.ModelsView.CartItem>
+@{
+    var cusid = ViewBag.CusID;
+    ViewData["Title"] = "Giỏ hàng";
+    Layout = "~/views/shared/_Layout.cshtml";
+}
+
+@if (Model == null || Model.Count == 0)
+{
+    <div class="margin-top cart_null" style="margin:0px 150px" ><img style="width:100%" src="~/Cus_assets/img/cart-empty.png" alt="Chưa có sản phẩm " /> </div>
+    <h3 style="text-align:center">Bạn chưa có sản phẩm nào !</h3>
+}
+else
+{
+    <div class="cart padding-l-r margin-top">
+        <table class="cart_table">
+            <thead class="text-center table_head">
+                <tr>
+                    <td class="header_context_product"><a href="#" class="remove_all_product"><i class="bx bx-trash"></i></a></td>
+                    <td class="header_context_product">Sản phẩm</td>
+                    <td class="header_context_product">Giá</td>
+                    <td class="header_context_product">Số lượng</td>
+                    <td class="header_context_product">Tổng tiền</td>
+                </tr>
+            </thead>
+            <tbody class="table_body">
+                @foreach (var item in Model)
+                {
+                    <tr class="table_row">
+                        <td class="table_column_product text-center"><a href="#" data-id="@item?.product?.Id" class="remove_product"><i class="bx bx-trash"></i></a></td>
+                        <td class="table_column_product">
+                            <a class="table_product_detail" href="#">
+                                <img class="tbl_img_product" src="~/FolderImages/products/@item.product?.Thumb" alt="">
+                                <h3>@item.product?.ProductName</h3>
+                            </a>
+                        </td>
+                        @{
+                            double? price = item?.product?.Price;
+                            string formattedPrice = price.HasValue ? Utilities.ToVND(price.Value) : "N/A";
+                        }
+                        <td class="table_column_product text-center textroot">@formattedPrice</td>
+                        <td class="table_column_product text-center">
+                            <div class="quantity_product">
+                                <span data-id="@item?.product?.Id" class="minus-btn"><i class="bx bx-minus"></i></span>
+                                <input  class="input_quantity_product" type="text" value="@item?.amount">
+                                <span data-id="@item?.product?.Id" class="plus-btn"><i class="bx bx-plus"></i></span>
+                            </div>
+                        </td>
+                        <td class="table_column_product text-center textroot">@Utilities.ToVND(item.TotalMoney)</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+    </div>
+
+
+}
+
+@{
+    if (Model?.Count() > 0 && Model != null)
+    {
+        var Subtotal = Model?.Sum(x => x.TotalMoney);
+        var price_shipping = 2000 * Model?.Count();
+        var total = Subtotal + price_shipping;
+        <div class="cartcheck padding-l-r margin-top">
+
+            <div class="cart_check">
+                <h1 class="text-center subtitle_cart">Đơn xem trước</h1>
+                <div class="cart_total">
+                    <h3 class="cart_subtitle">Tổng giá SP</h3>
+                    <h3 class="cart_price textroot">@Utilities.ToVND((double)Subtotal)</h3>
+                </div>
+                <div class="cart_shipping">
+                    <h3 class="cart_subtitle">Cước phí giao hàng</h3>
+                    <h3 class="cart_price textroot">@Utilities.ToVND((double)price_shipping)</h3>
+                </div>
+                <div class="cart_sum">
+                    <h3 class="cart_subtitle">Tổng đơn hàng</h3>
+                    <h3 class="cart_total_price">@Utilities.ToVND((double)total)</h3>
+                </div>
+                <div class="cart_coupon">
+                    <h3 class="cart_subtitle">Mã giảm giá</h3>
+                    <input class="cart_coupon_inp" placeholder="Coupon code" type="text">
+                </div>
+                <div class="btn_pay_container">
+                    @if (User.Identity.IsAuthenticated && cusid!=null)
+                    {
+                        
+                        <a class="btn_pay btn_primary" href="~/Checkout/index">Thanh toán</a>
+
+                    }
+                    else
+                    {
+                        <a class="btn_pay btn_primary" href="~/cus_account/Login?returnUrl=/Checkout/Index">Thanh toán</a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+
+}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".plus-btn").click(function () {
+                var input = $(this).prev(".input_quantity_product");
+                var id = $(this).data("id");
+                var currentValue = parseInt(input.val());
+                if (currentValue > 0) {
+                    input.val(currentValue + 1);
+                }
+                $.ajax({
+                    url: "/ShoppingCart/AddToCart",
+                    type: "POST",
+                    dataType: "json",
+                    data: { productID: id, amount: 1 },
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            });
+
+            $(".minus-btn").click(function () {
+                var input = $(this).next(".input_quantity_product");
+                var id = $(this).data("id");
+                var currentValue = parseInt(input.val());
+                if (currentValue > 1) {
+                    input.val(currentValue - 1);
+                }
+                $.ajax({
+                    url: "/ShoppingCart/ReduceToCart",
+                    type: "POST",
+                    dataType: "json",
+                    data: { productID: id, amount: 1 },
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            });
+            $(".remove_product").click(function(){
+                var id = $(this).data("id");
+                if(confirm("Bạn có muốn xóa sản phẩm này không ?"))
+                {
+                    $.ajax({
+                    url: "/ShoppingCart/RemoveProduct",
+                    type: "POST",
+                    dataType: "json",
+                    data: { productID: id,},
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+                }
+            })
+            $(".remove_all_product").on("click",function(){
+                if(confirm("Bạn có muốn xóa tất cả sản phẩm không ?"))
+                {
+                    $.ajax({
+                        url: '/ShoppingCart/RemoveCart',
+                        type:'POST',
+                        dataType: "json",
+                        success:function(data)
+                        {
+                            location.reload();
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+}

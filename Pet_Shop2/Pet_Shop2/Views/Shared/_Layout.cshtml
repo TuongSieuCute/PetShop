@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VTUANMAI chuyên cung cấp thức ăn, phụ kiện cho thú cưng của bạn với giá cả hợp lý và chất lượng tốt nhất.">
+    <meta name="keywords" content="PetShop,vạn giã,vạn ninh,khánh hòa, thú cưng vạn giã, đồ thú cưng vạn giá, sản phẩm thú cưng,thức ăn thú cưng vạn giã">
+    <meta name="author" content="Anh Khoa">
+    <meta property="og:image" content="https://www.w3schools.com/images/w3schools_logo_436_2.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="436">
+    <meta property="og:image:height" content="228">
+    <meta property="og:title" content="VTUANMAI PETSHOP">
+    <meta property="og:description" content="VTUANMAI chuyên cung cấp thức ăn, phụ kiện cho thú cưng của bạn với giá cả hợp lý và chất lượng tốt nhất.">
+
+    @RenderSection("LinkHeader", required: false)
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="~/Cus_assets/img/icons8-pet-64.png">
+    <link rel="stylesheet" href="~/Cus_assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/Cus_assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/Cus_assets/css/style.css">
+    <link rel="stylesheet" href="~/Cus_assets/css/grid.css">
+    <link rel="stylesheet" href="~/Cus_assets/css/chatbot.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+   
+    <title>Pet Shop</title>
+</head>
+<body>
+    <div class="header padding-l-r">
+       @await Html.PartialAsync("_PartialHeader.cshtml")
+    </div>
+    <div class="container padding-l-r margin-bot">
+        @RenderBody()
+        <div id="chatbox" class="slide-down">
+            <div id="box_header">
+                <div class="header_user">
+                    <div class="admin_image"><img src="" alt=""></div>
+                    <span>Tư vấn viên</span>
+                </div>
+                <div class="header_func">
+                    <a class="close_chatbox" href="#"><i class='bx bx-up-arrow-alt'></i></a>
+                </div>
+            </div>
+            <div id="box_body" class="slide-down">
+                <div class="user_left">
+                    <span>Bạn cần shop hỗ trợ gì ?</span>
+                </div>
+                <div class="user_right">
+                    <span>Hello bạn</span>
+                </div>
+            </div>
+            <div id="box_footer" class="hide">
+                <div class="input_user">
+                    <input id="user_message" placeholder="Gửi tin nhắn tại đây" type="text">
+                </div>
+                <a href="#" class="send_message"><i class='bx bxs-send'></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer row-wrap">
+        <ul class="footer_items l-3 m-6 s-12">
+            <li class="footer_item"><a href="" class="footer_link"><img src="~/Cus_assets/img/white-logo.png" alt=""></a></li>
+            <li class="footer_item">
+                <span class="footer_name-link white-color">Đường dây nóng: </span>
+                <a href="" class="footer_link hover_link">0966160922</a>
+            </li>
+            <li class="footer_item">
+                <span class="footer_name-link white-color">Số ĐT hỗ trợ: </span>
+                <a href="" class="footer_link hover_link">0966160922</a>
+            </li>
+            <li class="footer_item">
+                <span class="footer_name-link white-color">Email: </span>
+                <a href="" class="footer_link hover_link">trankhoa192837@gmail.com</a>
+            </li>
+            <li class="footer_item">
+                <span class="footer_name-link white-color">Địa chỉ: </span>
+                <a href="" class="footer_link hover_link">96/3 Nguyễn Huệ,Vạn Giã,Vạn Ninh,Khánh Hòa</a>
+            </li>
+        </ul>
+        <ul class="footer_items l-3 m-6 s-12">
+            <li class="footer_item white-color footer_name_items">Thông tin</li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="" class="footer_link hover_link">Về chúng tôi</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="" class="footer_link hover_link">Điền khoản và điều kiện</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="" class="footer_link hover_link">Privacy Policy</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="" class="footer_link hover_link">Refund Policy</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="" class="footer_link hover_link">Quyền cookies</a>
+            </li>
+        </ul>
+        <ul class="footer_items l-3 m-6 s-12">
+            <li class="footer_item white-color footer_name_items">Dịch vụ khách hàng</li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="/myaccount/index" class="footer_link hover_link">Tài khoản của tôi</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="" class="footer_link hover_link">Câu hỏi</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="/ordertracking" class="footer_link hover_link">Lich sử đặt hàng</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="/checkout/index" class="footer_link hover_link">Kiểm tra đơn hàng</a>
+            </li>
+            <li class="footer_item">
+                <i class='bx bx-chevron-right'></i>
+                <a href="#" class="footer_link hover_link">Thông tin đơn hàng</a>
+            </li>
+        </ul>
+        <ul class="footer_items l-3 m-6 s-12">
+            <li class="footer_item white-color footer_name_items">Theo dõi bản tin</li>
+            <li class="footer_item white-color"><span class="footer_link">Đăng kí tài khoản để nhận được các ưu đãi và nhận được thông báo mới nhất !</span></li>
+            <li class="footer_item footer_input_user">
+                <input placeholder="Địa chỉ email của bạn" class="footer_ipEmail" autocomplete="off" type="text">
+                <button type="submit" class="footer_btn_send"><i class="bx bx-paper-plane"></i></button>
+            </li>
+            <li class="footer_item"><span class="footer_link white-color">Các dịch vụ thanh toán</span></li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="~/Cus_assets/JS/main.js"></script>
+<script src="~/Cus_assets/JS/owl.carousel.min.js"></script>
+<script src="~/Cus_assets/JS/chatbot.js"></script>
+<script>
+    
+    $(document).ready(function () {
+        var currentPath = window.location.pathname;
+        $(".header_link").each(function () {
+            var linkPath = $(this).attr("href");
+            if (currentPath.includes(linkPath)) {
+                $(this).addClass("active_page");
+            }
+            else {
+                $(this).removeClass("active_page");
+            }
+        });
+        if (currentPath === "/") {
+            $(".header_link[href='/Home/index']").addClass("active_page");
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const headerPageList = document.querySelectorAll(".header_page_list");
+
+        headerPageList.forEach(function (item) {
+            const pageList = item.querySelector(".page_list");
+            const closeButton = item.querySelector(".page_list_close");
+
+            // Kiểm tra điều kiện màn hình
+            if (window.innerWidth <= 767 || (window.innerWidth >= 768 && window.innerWidth <= 1024)) {
+                // Thêm sự kiện click vào header_page
+                item.addEventListener("click", function () {
+                    togglePageList(pageList, closeButton);
+                });
+
+                // Thêm sự kiện click vào icon close
+                closeButton.addEventListener("click", function (e) {
+                    e.stopPropagation(); // Ngăn chặn sự kiện click từ việc lan truyền lên header_page
+                    hidePageList(pageList, closeButton);
+                });
+            }
+        });
+
+        // Hàm hiển thị danh sách page và icon close
+        function togglePageList(pageList, closeButton) {
+            if (pageList.style.display === "block") {
+                hidePageList(pageList, closeButton);
+            } else {
+                showPageList(pageList, closeButton);
+            }
+        }
+
+        // Hàm hiển thị danh sách page và icon close
+        function showPageList(pageList, closeButton) {
+            pageList.style.display = "block";
+            closeButton.style.display = "block";
+        }
+
+        // Hàm ẩn danh sách page và icon close
+        function hidePageList(pageList, closeButton) {
+            pageList.style.display = "none";
+            closeButton.style.display = "none";
+        }
+    });
+
+</script>
+<script>
+    $(".send_message").on("click",function(){
+        var mess = $("#user_message").val();
+        $("#user_message").val("");
+        $('#box_body').append(`<div class='user_right'> <span>${mess}</span> </div>`);
+        $.ajax({
+            url: '/ChatBotAI/GenerateLoremIpsum/',
+            data: { message: mess },
+            
+            type: 'POST',
+            success: function (answer) {
+                $('#box_body').append(`<div class='user_left'><span>${answer} </span></div>`);
+            }
+        });
+        
+    });
+</script>
+@RenderSection("Scripts", required: false)
+@await Component.InvokeAsync("Notyf")
+
+
