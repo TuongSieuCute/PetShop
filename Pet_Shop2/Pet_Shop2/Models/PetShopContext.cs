@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Pet_Shop2.Models;
 
@@ -50,7 +51,14 @@ public partial class PetShopContext : DbContext
     public virtual DbSet<Ward> Wards { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=ADMIN;Initial Catalog=Pet_Shop;Integrated Security=True;TrustServerCertificate=True");
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+        .Build();
+
+        optionsBuilder.UseSqlServer(configuration.GetConnectionString("dbPet_Shop"));
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

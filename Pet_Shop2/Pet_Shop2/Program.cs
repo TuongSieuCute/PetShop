@@ -12,7 +12,12 @@ using Pet_Shop2.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PetShopContext>(options =>
 {
-    options.UseSqlServer("Server=ADMIN;Database=Pet_Shop;Integrated Security=true;TrustServerCertificate=True");
+    IConfigurationRoot configuration = new ConfigurationBuilder()
+        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+        .AddJsonFile("appsettings.json")
+        .Build();
+
+    options.UseSqlServer(configuration.GetConnectionString("dbPet_Shop"));
 });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
