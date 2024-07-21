@@ -8,18 +8,21 @@ using Pet_Shop2.Models;
 using Pet_Shop2.ModelsView;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
+using ECommerceMVC.Helpers;
 
 namespace Pet_Shop2.Controllers
 {
     [Authorize]
     public class ShoppingCartController : Controller
     {
+        private readonly PaypalClient paypalClient;
         private readonly PetShopContext db;
         public INotyfService notyfService { get; }
 
 
-        public ShoppingCartController(PetShopContext db, INotyfService notyfService)
+        public ShoppingCartController(PetShopContext db, INotyfService notyfService, PaypalClient paypalClient)
         {
+            this.paypalClient = paypalClient;
             this.db = db;
             this.notyfService = notyfService;
 
@@ -127,6 +130,7 @@ namespace Pet_Shop2.Controllers
                 ViewBag.Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
             var lsCart = GioHang;
             ViewBag.CusID = HttpContext.Session.GetString("CustomerId");
+            TempData["PayPalClientId"] = paypalClient.ClientId;
             return View(lsCart);
         }
         [AllowAnonymous]

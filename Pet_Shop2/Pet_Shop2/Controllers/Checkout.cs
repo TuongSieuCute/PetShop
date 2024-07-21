@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ECommerceMVC.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace Pet_Shop2.Controllers
     [Authorize]
     public class Checkout : Controller
     {
+        private readonly PaypalClient paypalClient;
         PetShopContext db;
         INotyfService notyfService;
-        public Checkout(PetShopContext db, INotyfService notyfService)
+        public Checkout(PetShopContext db, INotyfService notyfService, PaypalClient paypalClient)
         {
+            this.paypalClient = paypalClient;
             this.db = db;
             this.notyfService = notyfService;
         }
@@ -35,6 +38,7 @@ namespace Pet_Shop2.Controllers
             if ( CusID !=null)
             {
                 var customer = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
+                ViewBag.PayPalClientId = TempData["PayPalClientId"];
                 return View(customer);
             }    
             return View(null);  
@@ -100,6 +104,53 @@ namespace Pet_Shop2.Controllers
             lstCart = null;
             HttpContext.Session.Set<List<CartItem>>("GioHang", lstCart);
             return Json(new {success = true, OrderId= orderid });
+        }
+
+        public IActionResult PaymentSuccess()
+        {
+            return View("Success");
+        }
+
+        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>("GioHang");
+
+        [HttpPost("/Cart/create-paypal-order")]
+        public async Task<IActionResult> CreatePaypalOrder(CancellationToken cancellationToken)
+        {
+            // Thông tin đơn hàng gửi qua Paypal
+            var tongTien = Cart.Sum(p => p.TotalMoney).ToString();
+            var donViTienTe = "USD";
+            var maDonHangThamChieu = "DH" + DateTime.Now.Ticks.ToString();
+
+            try
+            {
+                var response = await paypalClient.CreateOrder(tongTien, donViTienTe, maDonHangThamChieu);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("/Cart/capture-paypal-order")]
+        public async Task<IActionResult> CapturePaypalOrder(string orderID, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await paypalClient.CaptureOrder(orderID);
+
+                // Lưu database đơn hàng của mình
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
         }
     }
 }

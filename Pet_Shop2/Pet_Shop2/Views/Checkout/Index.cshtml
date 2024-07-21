@@ -133,6 +133,7 @@
         </table>
     </div>
     <div class="area_pay margin-l-r margin-top">
+        <h2 class="area_order title_if">Phương thức thanh toán</h2>
         <div class="container_pay">
             <div class="container_select_pay">
                 <input name="select_pay" type="radio" required>
@@ -148,9 +149,11 @@
             <p>Bạn sẽ trả tiền sau khi nhận đơn hàng sau thời gian 3 ngày kể từ khi đặt hàng</p>
         </div>
         <button class="order_pay" type="submit">Đặt hàng</button>
+        <div id="paypal-button-container" style="max-width:1000px;"></div>
     </div>
 </form>
 @section Scripts{
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PayPalClientId"></script>
     <script>
         $(document).ready(function () {
             $("#province").change(function () {
@@ -238,5 +241,33 @@
             });
             
         })
+
+        paypal.Buttons({
+            style: {
+                disableMaxWidth: true,
+            },
+            createOrder: (data, actions) => {
+                return fetch("/Cart/create-paypal-order", {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw error; });
+                    }
+                    return response.json();
+                }).then((order) => order.id)
+                    .catch(error => alert(error.message));
+            },
+            onApprove: (data, actions) => {
+                return fetch(`/Cart/capture-paypal-order?orderId=${data.orderID}`, {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw error; });
+                    }
+                    //Đổi địa chỉ tới action thông báo thành công
+                    window.location.href = "/Cart/PaymentSuccess";
+                }).catch(error => alert(error.message));
+            }
+        }).render('#paypal-button-container');
     </script>
 }
