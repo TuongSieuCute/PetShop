@@ -54,7 +54,7 @@ namespace Pet_Shop2.Controllers
            
             string? province = db.Locations.SingleOrDefault(x => x.Id == _province)?.Name;
             string? district = db.Districts.SingleOrDefault(x => x.Id == _district)?.Name;
-            string? ward = db.Wards.SingleOrDefault(x => x.WardId == _ward)?.Name;
+            string? ward = db.Wards.FirstOrDefault(x => x.WardId == _ward)?.Name;
             var orderid = -1;
             if (IDCus != null)
             {
@@ -143,7 +143,44 @@ namespace Pet_Shop2.Controllers
                 var response = await paypalClient.CaptureOrder(orderID);
 
                 // Lưu database đơn hàng của mình
+                var orderDetails = response;
+                var customer = int.Parse(HttpContext.Session.GetString("CustomerId")); 
+                var checkOrder = await db.Orders.FirstOrDefaultAsync(o => o.PaymentId == int.Parse(orderDetails.id));
+                if (checkOrder == null)
+                {
+                    var newOrder = new Order
+                    {
+                        AccountId = customer,
+                        Address = orderDetails.purchase_units[0].shipping.address.address_line_1,
+                        OrderDate = DateTime.Now,
+                        ShipDate = DateTime.Now.AddDays(3),
+                        TransctStatusId = 1,
+                        Deleted = false,
+                        Paid = true,
+                        PaymentDate = DateTime.Now,
+                        PaymentId = int.Parse(orderDetails.id),
+                        Note = "Paid by Paypal"
+                    };
+                    db.Orders.Add(newOrder);
+                    await db.SaveChangesAsync();
+                    var Items = HttpContext.Session.Get<List<CartItem>>("GioHang");
+                    foreach (var item in Items)
+                    {
+                        var ord = new OrderDetail
+                        {
+                            OrderId = newOrder.Id,
+                            ProductId = item.product.Id,
+                            Quantity = item.amount,
+                            Total = (decimal)item.TotalMoney
 
+                        };
+                        db.OrderDetails.Add(ord);
+
+                    }
+                    await db.SaveChangesAsync();
+                    HttpContext.Session.Set<List<CartItem>>("GioHang",null);
+                }
+               
                 return Ok(response);
             }
             catch (Exception ex)
