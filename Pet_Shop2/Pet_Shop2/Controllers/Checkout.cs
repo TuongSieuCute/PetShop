@@ -35,14 +35,14 @@ namespace Pet_Shop2.Controllers
             var CusID = HttpContext.Session.GetString("CustomerId");
             if (CusID != null)
                 ViewBag.Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
-            if ( CusID !=null)
+            if (CusID != null)
             {
                 var customer = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
                 ViewBag.PayPalClientId = TempData["PayPalClientId"];
                 return View(customer);
-            }    
-            return View(null);  
-            
+            }
+            return View(null);
+
         }
         [HttpPost]
         public IActionResult Themdonhang(string ordernote = "", int _province = 0, int _district = 0, int _ward = 0, string stresshouse = "")
@@ -50,8 +50,8 @@ namespace Pet_Shop2.Controllers
 
             var lstCart = HttpContext.Session.Get<List<CartItem>>("GioHang");
             var IDCus = HttpContext.Session.GetString("CustomerId");
-            
-           
+
+
             string? province = db.Locations.SingleOrDefault(x => x.Id == _province)?.Name;
             string? district = db.Districts.SingleOrDefault(x => x.Id == _district)?.Name;
             string? ward = db.Wards.FirstOrDefault(x => x.WardId == _ward)?.Name;
@@ -76,11 +76,11 @@ namespace Pet_Shop2.Controllers
                     Deleted = false,
                     Paid = false,
                     Note = ordernote,
-                    TransctStatusId=1,
+                    TransctStatusId = 1,
                     Address = province + "," + district + "," + ward + "," + stresshouse
                 };
                 db.Orders.Add(ord);
-               
+
                 db.SaveChanges();
                 orderid = ord.Id;
                 foreach (var item in lstCart)
@@ -97,14 +97,16 @@ namespace Pet_Shop2.Controllers
                     db.SaveChanges();
                 }
             }
-            
 
-            
-            
+
+
+
             lstCart = null;
             HttpContext.Session.Set<List<CartItem>>("GioHang", lstCart);
-            return Json(new {success = true, OrderId= orderid });
+            return Json(new { success = true, OrderId = orderid });
         }
+        [Authorize]
+        [HttpGet]
 
         public IActionResult PaymentSuccess()
         {
@@ -116,7 +118,6 @@ namespace Pet_Shop2.Controllers
         [HttpPost("/Cart/create-paypal-order")]
         public async Task<IActionResult> CreatePaypalOrder(CancellationToken cancellationToken)
         {
-            // Thông tin đơn hàng gửi qua Paypal
             var tongTien = Cart.Sum(p => p.TotalMoney).ToString();
             var donViTienTe = "USD";
             var maDonHangThamChieu = "DH" + DateTime.Now.Ticks.ToString();
@@ -134,6 +135,7 @@ namespace Pet_Shop2.Controllers
             }
         }
 
+
         [Authorize]
         [HttpPost("/Cart/capture-paypal-order")]
         public async Task<IActionResult> CapturePaypalOrder(string orderID, CancellationToken cancellationToken)
@@ -141,46 +143,48 @@ namespace Pet_Shop2.Controllers
             try
             {
                 var response = await paypalClient.CaptureOrder(orderID);
-
-                // Lưu database đơn hàng của mình
-                var orderDetails = response;
-                var customer = int.Parse(HttpContext.Session.GetString("CustomerId")); 
-                var checkOrder = await db.Orders.FirstOrDefaultAsync(o => o.PaymentId == int.Parse(orderDetails.id));
-                if (checkOrder == null)
+                if (response.status == "COMPLETED")
                 {
-                    var newOrder = new Order
+                    var lstCart = HttpContext.Session.Get<List<CartItem>>("GioHang");
+                    var IDCus = HttpContext.Session.GetString("CustomerId");
+
+                    if (IDCus != null)
                     {
-                        AccountId = customer,
-                        Address = orderDetails.purchase_units[0].shipping.address.address_line_1,
-                        OrderDate = DateTime.Now,
-                        ShipDate = DateTime.Now.AddDays(3),
-                        TransctStatusId = 1,
-                        Deleted = false,
-                        Paid = true,
-                        PaymentDate = DateTime.Now,
-                        PaymentId = int.Parse(orderDetails.id),
-                        Note = "Paid by Paypal"
-                    };
-                    db.Orders.Add(newOrder);
-                    await db.SaveChangesAsync();
-                    var Items = HttpContext.Session.Get<List<CartItem>>("GioHang");
-                    foreach (var item in Items)
-                    {
-                        var ord = new OrderDetail
+                        var Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(IDCus));
+                        if (Acc != null)
                         {
-                            OrderId = newOrder.Id,
-                            ProductId = item.product.Id,
-                            Quantity = item.amount,
-                            Total = (decimal)item.TotalMoney
+                            Order ord = new Order()
+                            {
+                                AccountId = Acc.Id,
+                                OrderDate = DateTime.Now,
+                                ShipDate = DateTime.Now.AddDays(3),
+                                Deleted = false,
+                                Paid = true,
+                                PaymentDate = DateTime.Now,
+                                Note = "Paid via PayPal",
+                                TransctStatusId = 2,
+                                Address = Acc.Address
+                            };
+                            db.Orders.Add(ord);
+                            db.SaveChanges();
 
-                        };
-                        db.OrderDetails.Add(ord);
-
+                            foreach (var item in lstCart)
+                            {
+                                OrderDetail orderDetail = new OrderDetail()
+                                {
+                                    OrderId = ord.Id,
+                                    ProductId = item.product.Id,
+                                    Quantity = item.amount,
+                                    Total = (decimal)item.TotalMoney
+                                };
+                                db.OrderDetails.Add(orderDetail);
+                            }
+                            db.SaveChanges();
+                            HttpContext.Session.Set("GioHang", null); 
+                        }
                     }
-                    await db.SaveChangesAsync();
-                    HttpContext.Session.Set<List<CartItem>>("GioHang",null);
                 }
-               
+
                 return Ok(response);
             }
             catch (Exception ex)
@@ -189,5 +193,6 @@ namespace Pet_Shop2.Controllers
                 return BadRequest(error);
             }
         }
+
     }
 }
