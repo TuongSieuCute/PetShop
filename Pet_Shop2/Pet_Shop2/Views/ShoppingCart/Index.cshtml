@@ -80,6 +80,10 @@ else
                     <h3 class="cart_subtitle">Tổng đơn hàng</h3>
                     <h3 class="cart_total_price">@Utilities.ToVND((double)total)</h3>
                 </div>
+                <div class="cart_sum">
+                    <h3 class="cart_subtitle"></h3>
+                    <h3 class="cart_total_price">@Utilities.ToUSD((double)total)</h3>
+                </div>
                 <div class="cart_coupon">
                     <h3 class="cart_subtitle">Mã giảm giá</h3>
                     <input class="cart_coupon_inp" placeholder="Coupon code" type="text">

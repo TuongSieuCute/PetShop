@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Pet_Shop2.Models;
 using Pet_Shop2.ModelsView;
 using System;
+using System.Globalization;
 using System.Security.Cryptography;
 
 namespace Pet_Shop2.Controllers
@@ -118,7 +119,14 @@ namespace Pet_Shop2.Controllers
         [HttpPost("/Cart/create-paypal-order")]
         public async Task<IActionResult> CreatePaypalOrder(CancellationToken cancellationToken)
         {
-            var tongTien = Cart.Sum(p => p.TotalMoney).ToString();
+            // Thông tin đơn hàng gửi qua Paypal
+            var tongTienUSD = Convert.ToDouble(
+                (Cart.Sum(p => p.TotalMoney) / 25315)
+                    .ToString("C", new CultureInfo("en-US"))
+                    .Remove(0, 1)
+            );
+
+            var tongTien = tongTienUSD.ToString();
             var donViTienTe = "USD";
             var maDonHangThamChieu = "DH" + DateTime.Now.Ticks.ToString();
 
