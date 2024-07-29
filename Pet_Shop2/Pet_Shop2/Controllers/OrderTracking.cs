@@ -57,5 +57,26 @@ namespace Pet_Shop2.Controllers
             return View(lstOrderDetails);
 
         }
+        [HttpPost]
+        public IActionResult DeleteOrder(int orderId)
+        {
+            var CusID = HttpContext.Session.GetString("CustomerId");
+            if (CusID != null)
+            {
+                var order = db.Orders
+                              .Include(o => o.OrderDetails)
+                              .SingleOrDefault(o => o.Id == orderId);
+
+                if (order != null)
+                {
+                    db.OrderDetails.RemoveRange(order.OrderDetails);
+                    db.Orders.Remove(order);
+                    db.SaveChanges();
+                    return Json(new { success = true });
+                }
+            }
+
+            return Json(new { success = false });
+        }
     }
 }
