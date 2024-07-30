@@ -67,6 +67,20 @@ namespace Pet_Shop2.Helper
             }    
             return sb.ToString();
         }
+
+        public static string ToFriendlyUrl(this string message) {
+            return message.Replace(" ", "-")
+                .ToLower()
+                .ToNonAccentVietnamese();
+        }
+        public static string ToNonAccentVietnamese(this string message) {
+            Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
+            string temp = message.Normalize(NormalizationForm.FormD);
+            return regex.Replace(temp, string.Empty)
+                .Replace('\u0111', 'd')
+                .Replace('\u0110', 'D');
+        }
+
         public static string SEOUrl(this string url)
         {
             var result = url.ToLower().Trim();
