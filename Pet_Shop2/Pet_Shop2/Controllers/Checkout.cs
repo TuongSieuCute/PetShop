@@ -1,5 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ECommerceMVC.Helpers;
+using ECommerceMVC.Services;
+using ECommerceMVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +20,14 @@ namespace Pet_Shop2.Controllers
         private readonly PaypalClient paypalClient;
         PetShopContext db;
         INotyfService notyfService;
-        public Checkout(PetShopContext db, INotyfService notyfService, PaypalClient paypalClient)
+        private readonly IVnPayService _vnPayservice;
+
+        public Checkout(PetShopContext db, INotyfService notyfService, PaypalClient paypalClient, IVnPayService vnPayservice)
         {
             this.paypalClient = paypalClient;
             this.db = db;
             this.notyfService = notyfService;
+            _vnPayservice = vnPayservice;
         }
         public IActionResult Index()
         {
@@ -46,7 +51,7 @@ namespace Pet_Shop2.Controllers
 
         }
         [HttpPost]
-        public IActionResult Themdonhang(string ordernote = "", int _province = 0, int _district = 0, int _ward = 0, string stresshouse = "")
+        public IActionResult Themdonhang(string ordernote = "", int _province = 0, int _district = 0, int _ward = 0, string stresshouse = "", string payment = "COD")
         {
 
             var lstCart = HttpContext.Session.Get<List<CartItem>>("GioHang");
@@ -62,6 +67,19 @@ namespace Pet_Shop2.Controllers
                 var Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(IDCus));
                 if (Acc != null)
                 {
+                    if (payment == "Thanh toán VNPay")
+                    {
+                        var vnPayModel = new VnPaymentRequestModel
+                        {
+                            Amount = lstCart.Sum(p => p.TotalMoney),
+                            CreatedDate = DateTime.Now,
+                            Description = $"{Acc.FullName} {Acc.Phone}",
+                            FullName = Acc.FullName,
+                            OrderId = new Random().Next(1000, 100000)
+                        };
+                        return Redirect(_vnPayservice.CreatePaymentUrl(HttpContext, vnPayModel));
+                    }
+
                     Acc.Location = province;
                     Acc.District = district;
                     Acc.Ward = ward;
@@ -202,5 +220,24 @@ namespace Pet_Shop2.Controllers
             }
         }
 
+        [Authorize]
+        public IActionResult PaymentFail() {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult PaymentCallBack() {
+            var response = _vnPayservice.PaymentExecute(Request.Query);
+
+            if (response == null || response.VnPayResponseCode != "00") {
+                TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
+                return RedirectToAction("PaymentFail");
+            }
+
+            // Lưu đơn hàng vô database
+
+            TempData["Message"] = $"Thanh toán VNPay thành công";
+            return RedirectToAction("PaymentSuccess");
+        }
     }
 }
