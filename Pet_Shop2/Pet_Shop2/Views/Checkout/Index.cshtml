@@ -201,8 +201,21 @@
                 var selectedPaymentMethod = $('input[name="select_pay"]:checked').val();
                 if (selectedPaymentMethod === 'paypal') {
                     event.preventDefault();
-                    $('#paypal-button-container').show();
-                    paypal.Buttons().render('#paypal-button-container');
+                    var formData = $('#orderForm').serialize();
+                    $.ajax({
+                        url: '/checkout/themdonhang/',
+                        type: 'POST',
+                        datatype: 'json',
+                        data: formData,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#paypal-button-container').show();
+                                paypal.Buttons().render('#paypal-button-container');
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    });
                 } else {
                     processOrderForm(event);
                 }
@@ -263,14 +276,19 @@
                     }).catch(error => alert(error.message));
                 },
                 onApprove: (data, actions) => {
-                    return fetch(`/Cart/capture-paypal-order?orderId=${data.orderID}`, {
+                    return fetch(`/Cart/capture-paypal-order?orderID=${data.orderID}`, {
                         method: "post",
                     }).then((response) => {
                         if (!response.ok) {
                             return response.json().then(error => { throw error; });
                         }
-                        $('#orderForm').unbind('submit');
-                        $('#orderForm').submit();
+                        return response.json();
+                    }).then((response) => {
+                        if (response.status === "COMPLETED") {
+                            window.location.href = "/ShoppingCart/Index";
+                        } else {
+                            alert("Payment was not completed. Please try again.");
+                        }
                     }).catch(error => alert(error.message));
                 }
             }).render('#paypal-button-container');
@@ -278,4 +296,3 @@
     </script>
 }
 
-}
