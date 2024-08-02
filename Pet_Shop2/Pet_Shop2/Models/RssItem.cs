@@ -2,37 +2,37 @@
 {
     public class RssItem
     {
-        public string Title
+        public string? Title
         {
             get;
             set;
         }
         
-        public string Description
+        public string? Description
         {
             get;
             set;
         }
         
-        public string PubDate
+        public string? PubDate
         {
             get;
             set;
         }
         
-        public string Link
+        public string? Link
         {
             get;
             set;
         }
         
-        public string Guid
+        public string? Guid
         {
             get;
             set;
         }
         
-        public string ImageUrl
+        public string? ImageUrl
         {
             get;
             set;

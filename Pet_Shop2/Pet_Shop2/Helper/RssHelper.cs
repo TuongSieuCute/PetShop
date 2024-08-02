@@ -5,7 +5,7 @@ namespace Pet_Shop2.Helper
 {
     public class RssHelper
     {
-        public static List<RssItem> Read(string url)
+        public static List<RssItem>? Read(string url)
         {
             var rssItems = new List<RssItem>();
             try
@@ -16,18 +16,16 @@ namespace Pet_Shop2.Helper
 
                 while (nodes.MoveNext())
                 {
-                    XPathNavigator currentNode = nodes.Current;
-
-                    Console.WriteLine();
+                    XPathNavigator? currentNode = nodes.Current;
 
                     rssItems.Add(new RssItem
                     {
-                        Title = currentNode.SelectSingleNode("title").Value,
-                        Description = currentNode.SelectSingleNode("description").Value,
-                        PubDate = currentNode.SelectSingleNode("pubDate").Value,
-                        Link = currentNode.SelectSingleNode("link").Value,
-                        Guid = currentNode.SelectSingleNode("guid").Value,
-                        ImageUrl = currentNode.SelectSingleNode("enclosure")?.GetAttribute("url", "")
+                        Title = currentNode?.SelectSingleNode("title")?.Value,
+                        Description = currentNode?.SelectSingleNode("description")?.Value,
+                        PubDate = currentNode?.SelectSingleNode("pubDate")?.Value,
+                        Link = currentNode?.SelectSingleNode("link")?.Value,
+                        Guid = currentNode?.SelectSingleNode("guid")?.Value,
+                        ImageUrl = currentNode?.SelectSingleNode("enclosure")?.GetAttribute("url", "")
                     });
                 }
             }
