@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<div class="row row-cols-1 row-cols-md-2 g-4" style="display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 25px;">
+    @foreach (RssItem item in ViewBag.rssItems)
+    {
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <a href="@item.Link">
+                    <img src="@item.ImageUrl" class="card-img-top" alt="" style="height: 150px;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                    <a class="card-link" href="@item.Link">Đọc thêm</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
