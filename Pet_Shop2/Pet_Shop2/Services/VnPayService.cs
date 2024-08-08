@@ -64,7 +64,8 @@ namespace ECommerceMVC.Services
                 };
             }
 
-            return new VnPaymentResponseModel {
+            return new VnPaymentResponseModel
+            {
                 Success = true,
                 PaymentMethod = "VnPay",
                 OrderDescription = vnp_OrderInfo,

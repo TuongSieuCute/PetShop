@@ -125,7 +125,7 @@ namespace Pet_Shop2.Controllers
             // Clear the cart from session
             HttpContext.Session.Set<List<CartItem>>("GioHang", null);
 
-            return Json(new { success = true, OrderId =ord.Id });
+            return Json(new { success = true, OrderId = ord.Id });
         }
 
 
@@ -226,7 +226,7 @@ namespace Pet_Shop2.Controllers
                             db.SaveChanges();
                             ord.PaymentId = ord.Id;
                             db.Orders.Update(ord);
-                            
+
 
                             foreach (var item in lstCart)
                             {
@@ -259,15 +259,18 @@ namespace Pet_Shop2.Controllers
         }
 
         [Authorize]
-        public IActionResult PaymentFail() {
+        public IActionResult PaymentFail()
+        {
             return View();
         }
 
         [Authorize]
-        public IActionResult PaymentCallBack() {
+        public IActionResult PaymentCallBack()
+        {
             var response = _vnPayservice.PaymentExecute(Request.Query);
 
-            if (response == null || response.VnPayResponseCode != "00") {
+            if (response == null || response.VnPayResponseCode != "00")
+            {
                 TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
                 return RedirectToAction("PaymentFail");
             }
