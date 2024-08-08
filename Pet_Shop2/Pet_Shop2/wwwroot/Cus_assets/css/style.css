@@ -2277,3 +2277,19 @@ button.owl-next, button.owl-prev {
         color: #d1d1d1;
         transition: color 0.3s ease;
     }
+
+.messenger-button {
+    position: fixed;
+    top: 50%; /* Đặt ở giữa chiều dọc của màn hình */
+    right: 20px; /* Cách cạnh phải màn hình 20px */
+}
+
+    .messenger-button img {
+        display: block;
+        width: 50px; /* Kích thước của SVG */
+        height: 50px;
+        background-color: transparent; /* Loại bỏ màu nền */
+        border-radius: 0; /* Loại bỏ bo tròn */
+        box-shadow: none; /* Loại bỏ đổ bóng */
+    }
+
