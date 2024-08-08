@@ -69,7 +69,8 @@ namespace Pet_Shop2.Controllers
                 return RedirectToAction("Index");
             }
         }
-        
+
+        [HttpGet("chi-tiet-san-pham/{product-name}-{id}")]
         public IActionResult Detail(int? id)
         {
             var CusID = HttpContext.Session.GetString("CustomerId");
