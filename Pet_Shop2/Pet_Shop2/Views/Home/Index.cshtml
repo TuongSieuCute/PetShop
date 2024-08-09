@@ -178,6 +178,34 @@
         </div>
     </div>
 </div>
+<div id="mc_embed_shell">
+    <div id="mc_embed_modal" class="modal">
+        <div id="mc_embed_signup" class="modal-content">
+            <span class="close">&times;</span>
+            <form action="https://gmail.us13.list-manage.com/subscribe/post?u=e50168a5a963040ac447f6853&amp;id=c8ccc4e464&amp;f_id=00bd39e3f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+                <div id="mc_embed_signup_scroll">
+                    <h1 class="products_heading">Đăng ký để nhận nhiều ưu đãi</h1>
+                    <div class="mc-field-group"><label for="mce-EMAIL">Email <span class="asterisk">*</span></label><input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required="" value=""></div>
+                    <div class="mc-field-group"><label for="mce-PNUMBER">Phone Number <span class="asterisk">*</span></label><input type="text" name="PNUMBER" class="required text" id="mce-PNUMBER" required="" value=""></div>
+                    <div id="mce-responses" class="clearfoot">
+                        <div class="response" id="mce-error-response" style="display: none;"></div>
+                        <div class="response" id="mce-success-response" style="display: none;"></div>
+                    </div>
+                    <div aria-hidden="true" style="position: absolute; left: -5000px;">
+                        <input type="text" name="b_e50168a5a963040ac447f6853_c8ccc4e464" tabindex="-1" value="">
+                    </div>
+                    <div class="optionalParent">
+                        <div class="clear foot">
+                            <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
+                            <p style="margin: 0px auto;"><a href="http://eepurl.com/iUOTLA" title="Mailchimp - email marketing made easy and fun"><span style="display: inline-block; background-color: transparent; border-radius: 4px;"><img class="refferal_badge" src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" style="width: 220px; height: 40px; display: flex; padding: 2px 0px; justify-content: center; align-items: center;"></span></a></p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="products_special margin-top">
     <h1 class="products_heading">Đề xuất cho bạn</h1>
     <div class="product_container row-wrap">
@@ -318,8 +346,29 @@
                 }
             })
         })
+        var modal = document.getElementById("mc_embed_modal");
 
-        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // Show the modal when the page loads
+        window.onload = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
+    <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+    <script type="text/javascript">    (function ($) { window.fnames = new Array(); window.ftypes = new Array(); fnames[0] = 'EMAIL'; ftypes[0] = 'email'; fnames[2] = 'PNUMBER'; ftypes[2] = 'text'; fnames[1] = 'FNAME'; ftypes[1] = 'text'; }(jQuery)); var $mcj = jQuery.noConflict(true);</script>
     <script src="~/cus_assets/js/shoppingcart.js"></script>
 }
