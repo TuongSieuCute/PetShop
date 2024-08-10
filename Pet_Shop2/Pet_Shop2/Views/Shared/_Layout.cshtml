@@ -17,7 +17,16 @@
     <link rel="stylesheet" href="~/Cus_assets/css/grid.css">
     <link rel="stylesheet" href="~/Cus_assets/css/chatbot.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    
+
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" nonce="YOUR_NONCE_VALUE"></script>
+
+    <meta property="og:title" content="@ViewData["OgTitle"]" />
+    <meta property="og:description" content="@ViewData["OgDescription"]" />
+
+    @if (ViewData["OgImage"] != null)
+    {
+        <meta property="og:image" content="https://hellopetshop-b5f6fygvcpgxgcgp.eastasia-01.azurewebsites.net/@(Url.Content(ViewData["OgImage"].ToString()))" />
+    }
     <title>Best Pet Shop - Quality Pet Supplies Online</title>
     <link rel="canonical" href="https://hellopetshop-b5f6fygvcpgxgcgp.eastasia-01.azurewebsites.net/" />
     <script type="application/ld+json">

@@ -12,6 +12,7 @@
     var lstProductRecently = ViewBag.ProductRecently as List<Product>;
     var lstProductSuggest = ViewBag.ProductSuggest as List<Product>;
 }
+
 <div class="Slider row margin-top">
     <div class="container_slider l-8 m-8 s-12">
         @if (lstSlider != null)
@@ -19,6 +20,10 @@
             <div class="slider_intro owl-carousel owl-theme">
                 @foreach (var item in lstSlider)
                 {
+                    if (ViewData["OgImage"] != null)
+                    {
+                        <img src="https://hellopetshop-b5f6fygvcpgxgcgp.eastasia-01.azurewebsites.net/@(Url.Content(ViewData["OgImage"].ToString()))"/>
+                    }
                     <div class="slider_item">
                         <img src="~/FolderImages/Sliders/@item.Image" alt="">
                         <div class="slider_item_detail">
