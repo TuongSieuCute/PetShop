@@ -1,4 +1,4 @@
-﻿@using Pet_Shop2.Helper;
+﻿﻿@using Pet_Shop2.Helper;
 @*@model Pet_Shop2.Models.OrderDetail;*@
 @model Pet_Shop2.Models.Account;
 @{
@@ -125,6 +125,14 @@
                         <td></td>
                         <td style="color:red">@Utilities.ToVND(lstCart.Sum(x=>x.TotalMoney))</td>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="color:red">@Utilities.ToUSD(lstCart.Sum(x=>x.TotalMoney))</td>
+                    </tr>
 
                 }
 
@@ -133,6 +141,7 @@
         </table>
     </div>
     <div class="area_pay margin-l-r margin-top">
+        <h2 class="area_order title_if">Phương thức thanh toán</h2>
         <div class="container_pay">
             <div class="container_select_pay">
                 <input name="select_pay" type="radio" required>
@@ -147,12 +156,16 @@
             </div>
             <p>Bạn sẽ trả tiền sau khi nhận đơn hàng sau thời gian 3 ngày kể từ khi đặt hàng</p>
         </div>
-        <button class="order_pay" type="submit">Đặt hàng</button>
+        <input class="order_pay" type="submit" name="payment" value="Đặt hàng">
+        <input class="order_pay" type="submit" name="payment" value="Thanh toán VNPay">
+        <div id="paypal-button-container" style="max-width:1000px;"></div>
     </div>
 </form>
-@section Scripts{
+@section Scripts {
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PayPalClientId"></script>
     <script>
         $(document).ready(function () {
+            // Populate districts based on selected province
             $("#province").change(function () {
                 var locationID = $("#province").val();
                 $.ajax({
@@ -160,21 +173,21 @@
                     type: 'GET',
                     data: { LocationID: locationID },
                     success: function (District) {
-                        //console.log(District);
                         $("#district").empty();
                         $("#ward").empty();
                         var strWard = '<option value="" disabled selected>Phường/Xã</option>';
                         $("#ward").append(strWard);
-                        var strDistrict = '<option value="1" disabled selected>Quận/Huyện</option>';
+                        var strDistrict = '<option value="" disabled selected>Quận/Huyện</option>';
                         $("#district").append(strDistrict);
                         $.each(District, function (i, item) {
                             var option = '<option value="' + item.id + '">' + item.name + '</option>';
                             $("#district").append(option);
                         });
                     }
-
                 });
             });
+
+            // Populate wards based on selected district
             $("#district").change(function () {
                 var districtID = $("#district").val();
                 $.ajax({
@@ -182,8 +195,6 @@
                     type: 'GET',
                     data: { DistrictID: districtID },
                     success: function (ward) {
-                        //console.log(District);
-
                         $("#ward").empty();
                         var strWard = '<option value="" disabled selected>Phường/Xã</option>';
                         $("#ward").append(strWard)
@@ -192,24 +203,43 @@
                             $("#ward").append(option);
                         });
                     }
-
                 });
             });
-            $('#orderForm').submit(function (event){
+
+            $('#orderForm').submit(function (event) {
+                var selectedPaymentMethod = $('input[name="select_pay"]:checked').val();
+                if (selectedPaymentMethod === 'paypal') {
+                    event.preventDefault();
+                    var formData = $('#orderForm').serialize();
+                    $.ajax({
+                        url: '/checkout/themdonhang/',
+                        type: 'POST',
+                        datatype: 'json',
+                        data: formData,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#paypal-button-container').show();
+                                paypal.Buttons().render('#paypal-button-container');
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    });
+                } else {
+                    processOrderForm(event);
+                }
+            });
+
+            function processOrderForm(event) {
                 event.preventDefault();
-                var formData = $(this).serialize();
-
-                
-
+                var formData = $('#orderForm').serialize();
                 $.ajax({
                     url: '/checkout/themdonhang/',
                     type: 'POST',
                     datatype: 'json',
                     data: formData,
                     success: function (data) {
-                        
                         Toastify({
-
                             text: "Bạn vừa đặt hàng thành công !",
                             close: true,
                             duration: 2000,
@@ -217,26 +247,60 @@
                                 background: "#28a745",
                             },
                             offset: {
-                                x: 0, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
-                                y: 70 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                                x: 0,
+                                y: 70
                             }
-
                         }).showToast();
                         setTimeout(function () {
-                            var orderId = data.orderId;
+                            var orderId = data.OrderId;
                             location.href = "/ordertracking/Details/?OrDerID=" + orderId;
                         }, 2500);
                         var emailcus = $("#emailcus").val()
                         $.ajax({
                             url: '/SendMail/SendMail',
                             type: 'POST',
-                            data: { id: data.orderId, toEmail: emailcus }
+                            data: { id: data.OrderId, toEmail: emailcus }
                         });
-
                     }
                 });
-            });
-            
-        })
+            }
+
+            paypal.Buttons({
+                style: {
+                    disableMaxWidth: true,
+                    color: 'silver',
+                    layout: 'vertical'
+                },
+                createOrder: (data, actions) => {
+                    return fetch("/Cart/create-paypal-order", {
+                        method: "post",
+                    }).then((response) => {
+                        if (!response.ok) {
+                            return response.json().then(error => { throw error; });
+                        }
+                        return response.json();
+                    }).then((order) => {
+                        $('#paypalOrderId').val(order.id);
+                        return order.id;
+                    }).catch(error => alert(error.message));
+                },
+                onApprove: (data, actions) => {
+                    return fetch(`/Cart/capture-paypal-order?orderID=${data.orderID}`, {
+                        method: "post",
+                    }).then((response) => {
+                        if (!response.ok) {
+                            return response.json().then(error => { throw error; });
+                        }
+                        return response.json();
+                    }).then((response) => {
+                        if (response.status === "COMPLETED") {
+                            window.location.href = "/ShoppingCart/Index";
+                        } else {
+                            alert("Payment was not completed. Please try again.");
+                        }
+                    }).catch(error => alert(error.message));
+                }
+            }).render('#paypal-button-container');
+        });
     </script>
 }

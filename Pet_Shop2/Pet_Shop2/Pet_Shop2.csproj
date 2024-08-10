@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Services\" />
     <Folder Include="wwwroot\FolderImages\banners\" />
     <Folder Include="wwwroot\FolderImages\Childproduct\" />
     <Folder Include="wwwroot\FolderImages\Sliders\" />

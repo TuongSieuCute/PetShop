@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -26,6 +27,13 @@ namespace Pet_Shop2.Helper
         public static string ToVND(this double dongia)
         {
             return dongia.ToString("#,##0") + " VNĐ";
+        }
+
+        public static string ToUSD(this double dongia)
+        {
+            double dongiaUSD = dongia / 25315;
+            return dongiaUSD.ToString("C", new CultureInfo("en-US"))
+                .Remove(0, 1) + " USD";
         }
 
         //Hàm tạo đường dẫn mới nếu không có

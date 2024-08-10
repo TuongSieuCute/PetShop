@@ -1,4 +1,4 @@
-﻿ using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 
 using Microsoft.AspNetCore.Http.Extensions;
 
@@ -8,18 +8,21 @@ using Pet_Shop2.Models;
 using Pet_Shop2.ModelsView;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
+using ECommerceMVC.Helpers;
 
 namespace Pet_Shop2.Controllers
 {
     [Authorize]
     public class ShoppingCartController : Controller
     {
+        private readonly PaypalClient paypalClient;
         private readonly PetShopContext db;
         public INotyfService notyfService { get; }
 
 
-        public ShoppingCartController(PetShopContext db, INotyfService notyfService)
+        public ShoppingCartController(PetShopContext db, INotyfService notyfService, PaypalClient paypalClient)
         {
+            this.paypalClient = paypalClient;
             this.db = db;
             this.notyfService = notyfService;
 
@@ -50,19 +53,19 @@ namespace Pet_Shop2.Controllers
             }
             else
             {
-                Product? prd = db.Products.SingleOrDefault(x=>x.Id== productID);
-                if(prd != null)
+                Product? prd = db.Products.SingleOrDefault(x => x.Id == productID);
+                if (prd != null)
                 {
                     item = new CartItem
                     {
-                        product=prd,
-                        amount=amount.HasValue? amount.Value:1,
+                        product = prd,
+                        amount = amount.HasValue ? amount.Value : 1,
                     };
                     gioHang.Add(item);
                 }
             }
-        
-            
+
+
             //Lưu lại session
             HttpContext.Session.Set<List<CartItem>>("GioHang", gioHang);
             //notyfService.success("Thêm sản phẩm thành công !");
@@ -79,8 +82,8 @@ namespace Pet_Shop2.Controllers
             CartItem? item = gioHang.SingleOrDefault(x => x.product?.Id == productID);
             if (item != null) // da ton tai => cap nhat so luong
             {
-                if (item.amount>1) item.amount -= amount.Value;
-        
+                if (item.amount > 1) item.amount -= amount.Value;
+
             }
             //Lưu lại session
             HttpContext.Session.Set<List<CartItem>>("GioHang", gioHang);
@@ -92,18 +95,18 @@ namespace Pet_Shop2.Controllers
         [AllowAnonymous]
         public IActionResult RemoveProduct(int productID)
         {
-            List<CartItem> gioHang=GioHang;
-            if(gioHang != null)
+            List<CartItem> gioHang = GioHang;
+            if (gioHang != null)
             {
-                CartItem? item = gioHang.SingleOrDefault(x=>x.product?.Id == productID);
-                if(item != null)
+                CartItem? item = gioHang.SingleOrDefault(x => x.product?.Id == productID);
+                if (item != null)
                 {
                     gioHang.Remove(item);
                 }
             }
             //Lưu lại session
             HttpContext.Session.Set<List<CartItem>>("GioHang", gioHang);
-            return Json(new {success = true});
+            return Json(new { success = true });
         }
         [HttpPost]
         [AllowAnonymous]
@@ -127,13 +130,14 @@ namespace Pet_Shop2.Controllers
                 ViewBag.Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
             var lsCart = GioHang;
             ViewBag.CusID = HttpContext.Session.GetString("CustomerId");
+            TempData["PayPalClientId"] = paypalClient.ClientId;
             return View(lsCart);
         }
         [AllowAnonymous]
         public IActionResult QuantityCart()
         {
             var lsCart = GioHang;
-            return PartialView("~/Views/Shared/Components/NumberCart/Default.cshtml",lsCart.Count());
+            return PartialView("~/Views/Shared/Components/NumberCart/Default.cshtml", lsCart.Count());
         }
     }
 }
