@@ -53,6 +53,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseNotyf();
 app.UseSession();
+app.MapControllers();
 
 app.UseEndpoints(endpoints =>
 {

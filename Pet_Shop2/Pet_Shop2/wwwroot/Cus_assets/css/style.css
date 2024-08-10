@@ -2277,3 +2277,22 @@ button.owl-next, button.owl-prev {
         color: #d1d1d1;
         transition: color 0.3s ease;
     }
+
+.messenger-button {
+    position: fixed;
+    top: 78%; 
+    right: 20px; 
+    z-index: 1000;
+}
+
+    .messenger-button img {
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background-color: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        object-fit: contain;
+    }
+
+

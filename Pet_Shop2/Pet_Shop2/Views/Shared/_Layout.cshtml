@@ -19,7 +19,8 @@
     <link rel="icon" href="~/Cus_assets/img/icons8-pet-64.png">
     <link rel="stylesheet" href="~/Cus_assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="~/Cus_assets/css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="~/Cus_assets/css/style.css">
+    @* <link rel="stylesheet" href="~/Cus_assets/css/style.css"> *@
+    <link rel="stylesheet" href="@Url.Content("~/Cus_assets/css/style.css?v=2.0")">
     <link rel="stylesheet" href="~/Cus_assets/css/grid.css">
     <link rel="stylesheet" href="~/Cus_assets/css/chatbot.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -134,6 +135,11 @@
             <li class="footer_item"><span class="footer_link white-color">Các dịch vụ thanh toán</span></li>
         </ul>
     </div>
+    <div>
+        <a href="https://m.me/61563589444497" target="_blank" class="messenger-button">
+            <img src="@Url.Content("~/FolderImages/pages/iconMess.svg")" alt="Messenger Icon" width="50" height="50" preserveAspectRatio="xMidYMid meet">
+        </a>
+    </div>
 </body>
 
 </html>
@@ -223,6 +229,17 @@
         });
         
     });
+</script>
+@* subiz *@
+<script>!function (s, u, b, i, z) { var o, t, r, y; s[i] || (s._sbzaccid = z, s[i] = function () { s[i].q.push(arguments) }, s[i].q = [], s[i]("setAccount", z), r = ["widget.subiz.net", "storage.googleapis" + (t = ".com"), "app.sbz.workers.dev", i + "a" + (o = function (k, t) { var n = t <= 6 ? 5 : o(k, t - 1) + o(k, t - 3); return k !== t ? n : n.toString(32) })(20, 20) + t, i + "b" + o(30, 30) + t, i + "c" + o(40, 40) + t], (y = function (k) { var t, n; s._subiz_init_2094850928430 || r[k] && (t = u.createElement(b), n = u.getElementsByTagName(b)[0], t.async = 1, t.src = "https://" + r[k] + "/sbz/app.js?accid=" + z, n.parentNode.insertBefore(t, n), setTimeout(y, 2e3, k + 1)) })(0)) }(window, document, "script", "subiz", "acsbmidliclnmarzqqoi")</script>
+<!-- Google tag (gtag.js) Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X1PX0PGQH7"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-X1PX0PGQH7');
 </script>
 @RenderSection("Scripts", required: false)
 @await Component.InvokeAsync("Notyf")
