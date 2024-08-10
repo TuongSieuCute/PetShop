@@ -22,13 +22,11 @@
 
     <meta property="og:title" content="@ViewData["OgTitle"]" />
     <meta property="og:description" content="@ViewData["OgDescription"]" />
-
-    @if (ViewData["OgImage"] != null)
-    {
-        <meta property="og:image" content="https://hellopetshop-b5f6fygvcpgxgcgp.eastasia-01.azurewebsites.net/@(Url.Content(ViewData["OgImage"].ToString()))" />
-    }
+    <meta property="og:image" content="@ViewData["OgImage"]" />
+    <meta property="og:url" content="@ViewData["OgUrl"]" />
+    <meta property="og:type" content="product" />
     <title>Best Pet Shop - Quality Pet Supplies Online</title>
-    <link rel="canonical" href="https://hellopetshop-b5f6fygvcpgxgcgp.eastasia-01.azurewebsites.net/" />
+    <link rel="canonical" href="@ViewData["OgUrl"]" />
     <script type="application/ld+json">
         {
           "context": "https://schema.org",
