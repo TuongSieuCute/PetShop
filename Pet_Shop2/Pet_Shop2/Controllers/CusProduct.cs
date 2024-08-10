@@ -69,27 +69,46 @@ namespace Pet_Shop2.Controllers
                 return RedirectToAction("Index");
             }
         }
-        
+
         public IActionResult Detail(int? id)
         {
+            if (id == null)
+            {
+                notyfService.Error("Lỗi trang. Vui lòng kiểm tra lại !");
+                return RedirectToAction("Index");
+            }
+
             var CusID = HttpContext.Session.GetString("CustomerId");
             if (CusID != null)
-                ViewBag.Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
-            ViewBag.ChildImage = db.ProductImages.Where(x => x.Idproduct == id).ToList();   
-            ViewBag.Comment = db.ProductRates.Where(x=>x.ProductId == id).ToList();
-            if (id!=null)
             {
-                var tmp = db.Products
-                    .Include(x=>x.Category)
-                    .SingleOrDefault(x=> x.Id == id);
-
-                
-                return View(tmp);
+                ViewBag.Acc = db.Accounts.SingleOrDefault(x => x.Id == int.Parse(CusID));
             }
-            notyfService.Error("Lỗi trang. Vui lòng kiểm tra lại !");
-            return RedirectToAction("Index");
+
+            var product = db.Products
+                            .Include(x => x.Category)
+                            .SingleOrDefault(x => x.Id == id);
+
+            if (product == null)
+            {
+                notyfService.Error("Sản phẩm không tồn tại.");
+                return RedirectToAction("Index");
+            }
+
+            // Load related images and comments
+            ViewBag.ChildImage = db.ProductImages.Where(x => x.Idproduct == id).ToList();
+            ViewBag.Comment = db.ProductRates.Where(x => x.ProductId == id).ToList();
+
+            // Set up Open Graph meta tags and view data
+            ViewData["Title"] = product.ProductName;
+            ViewData["Description"] = product.Description;
+            ViewData["OgTitle"] = product.ProductName;
+            ViewData["OgDescription"] = product.Description;
+            ViewData["OgImage"] = Url.Content($"~/FolderImages/products/{product.Thumb}");
+            ViewData["OgUrl"] = Url.Action("Detail", "Product", new { id = product.Id }, Request.Scheme);
+
+            return View(product);
         }
-        
+
         public IActionResult AddLikedproduct(int? id)
         {
             if (id != null)
