@@ -104,7 +104,7 @@ namespace Pet_Shop2.Controllers
             ViewData["OgTitle"] = product.ProductName;
             ViewData["OgDescription"] = product.Description;
             ViewData["OgImage"] = Url.Content($"~/FolderImages/products/{product.Thumb}");
-            ViewData["OgUrl"] = Url.Action("Detail", "Product", new { id = product.Id }, Request.Scheme);
+            ViewData["OgUrl"] = Url.Action("Detail", "CusProduct", new { id = product.Id }, Request.Scheme);
 
             return View(product);
         }
