@@ -1,0 +1,25 @@
+﻿User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+
+# Allow access to all product pages
+Allow: /products/
+Allow:/cusproduct/detail
+Allow:/cusproduct/
+Allow: /FolderImages/
+
+# If you want to allow specific file types only:
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.css$
+Allow: /*.js$
+
+# Block certain sensitive directories
+Disallow: /private/
+Disallow: /config/
+
+# Allow all other content to be indexed
+Allow: /
+Sitemap: https://hellopetshop-b5f6fygvcpgxgcgp.eastasia-01.azurewebsites.net/sitemap.xml
