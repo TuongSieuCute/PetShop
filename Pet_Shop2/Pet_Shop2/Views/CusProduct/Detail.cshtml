@@ -7,12 +7,13 @@
     var lstChildImage = ViewBag.ChildImage as List<ProductImage>;
     var lstComment = ViewBag.Comment as List<ProductRate>;
 }
+<meta property="og:image" content="@ViewData["OgImage"]" />
 <div class="detail_product margin-top">
     <div class="detail_product_container row-wrap">
         <div class="detail_product_img l-5 m-5 s-12">
             <div class="product">
                 <div class="product_border">
-                    <div class="product_img" style="height:unset"><img src="~/FolderImages/products/@Model.Thumb" alt=""></div>
+                    <div class="product_img" style="height:unset"><img src="~/FolderImages/products/@Model.Thumb" alt="OnSale"></div>
                     <span class="sticky_sale">On Sale !</span>
                 </div>
             </div>
@@ -22,18 +23,18 @@
                 <div class="product_connection owl-carousel owl-theme">
                     @foreach (var item in lstChildImage)
                     {
-                        <div class="item product_connection_img"><img src="~/FolderImages/Childproduct/@item.ImageName" alt=""></div>
+                        <div class="item product_connection_img"><img src="~/FolderImages/Childproduct/@item.ImageName" alt="ImageProduct"></div>
                     }
                 </div>
             }
             else
             {
                 <div class="product_connection owl-carousel owl-theme">
-                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products2.jpg" alt=""></div>
-                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products3.jpg" alt=""></div>
-                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products4.jpg" alt=""></div>
-                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products5.jpg" alt=""></div>
-                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products6.jpg" alt=""></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products2.jpg" alt="Product2"></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products3.jpg" alt="Product3"></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products4.jpg" alt="Product4"></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products5.jpg" alt="Product5"></div>
+                    <div class="item product_connection_img"><img src="~/Cus_assets/img/imgs_products/products6.jpg" alt="Product6"></div>
                 </div>
             }
 
@@ -118,7 +119,12 @@
             <div class="detail_product_share">
                 <h3>Share</h3>
                 <ul class="detail_product_share_items">
-                    <li class="detail_product_share_item"><i class='bx bxl-facebook'></i></li>
+                    <li class="detail_product_share_item">
+                        <div class="fb-share-button"
+                             data-href="@ViewData["OgUrl"]"
+                             data-layout="button_count">
+                        </div>
+                    </li>
                     <li class="detail_product_share_item"><i class='bx bxl-instagram'></i></li>
                     <li class="detail_product_share_item"><i class='bx bxl-linkedin'></i></li>
                     <li class="detail_product_share_item"><i class='bx bxl-twitter'></i></li>
@@ -148,7 +154,7 @@
             @foreach (var item in lstComment)
             {
                 <div class="row container_reviews">
-                    <div class="reviews_img l-1"><img src="https://templates.envytheme.com/patoi/default/assets/img/user/user1.jpg" alt=""></div>
+                    <div class="reviews_img l-1"><img src="https://templates.envytheme.com/patoi/default/assets/img/user/user1.jpg" alt="User"></div>
                     <div class="reviews_content l-11">
                         <h4 class="review_name">@item.CusName</h4>
                         <div class="product_stars">
@@ -167,8 +173,8 @@
         else
         {
             <div class="row container_reviews">
-               
-                    <p class="desc" style="text-align: justify;">Chưa có bình luận nào cho bài viết này !</p>
+
+                <p class="desc" style="text-align: justify;">Chưa có bình luận nào cho bài viết này !</p>
             </div>
 
         }
@@ -195,8 +201,7 @@
     </form>
 
 </div>
-
-@section Scripts{
+@section Scripts {
     <script src="~/cus_assets/js/shoppingcart.js"></script>
     <script>
         $(document).ready(function () {

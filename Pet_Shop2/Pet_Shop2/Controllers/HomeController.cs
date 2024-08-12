@@ -34,6 +34,8 @@ namespace Pet_Shop2.Controllers
             ViewBag.Banner = db.Banners.Take(4).ToList();
             ViewBag.ProductSuggest = db.Products.OrderByDescending(x => x.Star).Take(3).ToList();
             ViewBag.ProductRecently = db.Products.OrderByDescending(x=>x.Star).Take(10).ToList();
+            var product = db.Products.First();
+            ViewData["OgImage"] = Url.Content($"~/FolderImages/products/{product.Thumb}");
             return View(db.Products.Where(x => x.Active == true).Take(15).ToList());
         }
 
